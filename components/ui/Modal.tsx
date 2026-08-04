@@ -54,7 +54,7 @@ export function Modal({ isOpen, onClose, title, description, children, className
       {isOpen ? (
         <div className="fixed inset-0 z-100 flex items-end justify-center sm:items-center">
           <motion.div
-            className="absolute inset-0 bg-ink-950/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-deep-900/50 backdrop-blur-sm"
             variants={overlayFade}
             initial="hidden"
             animate="visible"
@@ -74,14 +74,14 @@ export function Modal({ isOpen, onClose, title, description, children, className
             animate="visible"
             exit="exit"
             className={cn(
-              "relative z-10 max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl border border-ink-100/10 bg-ink-900 p-6 shadow-2xl shadow-black/60 outline-none sm:max-w-lg sm:rounded-3xl sm:p-8",
+              "relative z-10 max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl bg-white p-6 shadow-card-lifted outline-none sm:max-w-lg sm:rounded-3xl sm:p-8",
               className,
             )}
           >
             {/* Kente edge — the only decorative flourish inside the dialog. */}
             <span
               aria-hidden="true"
-              className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-gold-400 to-transparent sm:inset-x-8"
+              className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-brand-500 to-transparent sm:inset-x-8"
             />
 
             <div className="mb-6 flex items-start justify-between gap-4">
@@ -92,14 +92,14 @@ export function Modal({ isOpen, onClose, title, description, children, className
                 type="button"
                 onClick={onClose}
                 aria-label="Close dialog"
-                className="-mr-1 -mt-1 grid size-11 shrink-0 place-items-center rounded-full text-ink-400 transition-colors hover:bg-ink-100/5 hover:text-ink-100"
+                className="-mr-1 -mt-1 grid size-11 shrink-0 place-items-center rounded-full text-ink-400 transition-colors hover:bg-brand-50 hover:text-brand-600"
               >
                 <X className="size-5" aria-hidden="true" />
               </button>
             </div>
 
             {description ? (
-              <p id={descriptionId} className="-mt-3 mb-6 text-sm leading-relaxed text-ink-400">
+              <p id={descriptionId} className="-mt-3 mb-6 text-sm leading-relaxed text-ink-600">
                 {description}
               </p>
             ) : null}

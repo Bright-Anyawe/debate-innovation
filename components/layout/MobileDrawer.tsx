@@ -1,12 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 
-import { Adinkra } from "@/components/ui/Adinkra";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
+import { GhanaAccent, Wordmark } from "@/components/ui/Brand";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { drawerItem, drawerSlide, overlayFade } from "@/lib/motion";
@@ -24,8 +25,8 @@ interface MobileDrawerProps {
  * Full-height navigation drawer for small screens.
  *
  * Slides in from the right with its links cascading behind the panel, so the
- * panel arrives first and the content settles — the sequence reads as one
- * movement instead of everything appearing at once.
+ * panel arrives first and the content settles — one movement rather than
+ * everything appearing at once.
  */
 export function MobileDrawer({ isOpen, onClose, onDonate, pathname }: MobileDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -33,12 +34,19 @@ export function MobileDrawer({ isOpen, onClose, onDonate, pathname }: MobileDraw
   useBodyScrollLock(isOpen);
   useFocusTrap(panelRef, isOpen, onClose);
 
+  // Flatten parent links and their children into one list for the drawer.
+  const entries = navLinks.flatMap((link) =>
+    link.children?.length
+      ? link.children.map((child) => ({ label: child.label, href: child.href }))
+      : [{ label: link.label, href: link.href }],
+  );
+
   return (
     <AnimatePresence>
       {isOpen ? (
         <div className="fixed inset-0 z-90 lg:hidden">
           <motion.div
-            className="absolute inset-0 bg-ink-950/75 backdrop-blur-sm"
+            className="absolute inset-0 bg-deep-900/45 backdrop-blur-sm"
             variants={overlayFade}
             initial="hidden"
             animate="visible"
@@ -56,46 +64,57 @@ export function MobileDrawer({ isOpen, onClose, onDonate, pathname }: MobileDraw
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute inset-y-0 right-0 flex w-[min(22rem,88vw)] flex-col overflow-y-auto border-l border-ink-100/10 bg-ink-900 outline-none"
+            className="absolute inset-y-0 right-0 flex w-[min(22rem,90vw)] flex-col overflow-y-auto bg-white outline-none"
           >
-            <Adinkra
-              symbol="nyansapo"
-              className="pointer-events-none absolute -right-16 top-24 size-64 text-gold-500/[0.06]"
-            />
-
-            <div className="flex items-center justify-between border-b border-ink-100/8 px-6 py-5">
-              <span className="font-display text-lg font-semibold text-ink-100">Menu</span>
+            <div className="flex items-center justify-between border-b border-ink-100 px-6 py-4">
+              <Wordmark stacked />
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation"
-                className="grid size-11 place-items-center rounded-full text-ink-400 transition-colors hover:bg-ink-100/5 hover:text-ink-100"
+                className="grid size-11 place-items-center rounded-full text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-600"
               >
                 <X className="size-5" aria-hidden="true" />
               </button>
             </div>
 
-            <nav aria-label="Mobile" className="relative flex-1 px-6 py-8">
+            <nav aria-label="Mobile" className="flex-1 px-5 py-6">
               <ul className="space-y-1">
-                {navLinks.map((link, index) => {
-                  const isActive = isNavLinkActive(link, pathname);
+                {entries.map((entry, index) => {
+                  const isActive = isNavLinkActive(
+                    { label: entry.label, href: entry.href },
+                    pathname,
+                  );
 
                   return (
-                    <motion.li key={link.href} custom={index} variants={drawerItem}>
+                    <motion.li key={entry.href} custom={index} variants={drawerItem}>
                       <Link
-                        href={link.href}
+                        href={entry.href}
                         onClick={onClose}
                         aria-current={isActive ? "page" : undefined}
                         className={cn(
-                          "group flex min-h-14 items-center justify-between rounded-2xl px-4 font-display text-2xl transition-colors",
+                          "group relative flex min-h-13 items-center justify-between overflow-hidden rounded-2xl px-4 text-lg font-semibold transition-colors duration-300",
                           isActive
-                            ? "bg-gold-400/10 text-gold-300"
-                            : "text-ink-200 hover:bg-ink-100/5 hover:text-ink-100",
+                            ? "bg-brand-50 text-brand-700"
+                            : "text-deep-700 hover:bg-brand-50/70 hover:text-brand-700",
                         )}
                       >
-                        {link.label}
-                        <ArrowUpRight
-                          className="size-5 text-ink-500 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold-400"
+                        {/* Cyan rail marking the current page. */}
+                        {isActive ? (
+                          <motion.span
+                            aria-hidden="true"
+                            layoutId="drawer-indicator"
+                            className="absolute inset-y-2 left-0 w-1 rounded-full bg-gradient-to-b from-brand-500 to-brand-300"
+                            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                          />
+                        ) : null}
+
+                        {entry.label}
+                        <ArrowRight
+                          className={cn(
+                            "size-4 transition-transform duration-300 group-hover:translate-x-1",
+                            isActive ? "text-brand-600" : "text-ink-300",
+                          )}
                           aria-hidden="true"
                         />
                       </Link>
@@ -104,8 +123,8 @@ export function MobileDrawer({ isOpen, onClose, onDonate, pathname }: MobileDraw
                 })}
               </ul>
 
-              <motion.div custom={navLinks.length} variants={drawerItem} className="mt-8">
-                <MagneticButton
+              <motion.div custom={entries.length} variants={drawerItem} className="mt-7">
+                <Button
                   size="lg"
                   className="w-full"
                   onClick={() => {
@@ -113,28 +132,49 @@ export function MobileDrawer({ isOpen, onClose, onDonate, pathname }: MobileDraw
                     onDonate();
                   }}
                 >
-                  Support a debater
-                </MagneticButton>
+                  Donate Now
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </Button>
               </motion.div>
             </nav>
 
-            <div className="border-t border-ink-100/8 px-6 py-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-ink-500">Follow</p>
-              <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-                {socialLinks.map((social, index) => (
-                  <motion.li key={social.label} custom={navLinks.length + 1 + index} variants={drawerItem}>
+            <div className="border-t border-ink-100 bg-surface-soft px-6 py-6">
+              <GhanaAccent />
+
+              <ul className="mt-4 space-y-2.5 text-sm text-ink-600">
+                <li className="flex items-center gap-2.5">
+                  <Phone className="size-4 shrink-0 text-brand-500" aria-hidden="true" />
+                  <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="hover:text-brand-600">
+                    {site.phone}
+                  </a>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Mail className="size-4 shrink-0 text-brand-500" aria-hidden="true" />
+                  <a href={`mailto:${site.email}`} className="break-all hover:text-brand-600">
+                    {site.email}
+                  </a>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <MapPin className="mt-0.5 size-4 shrink-0 text-brand-500" aria-hidden="true" />
+                  {site.address}
+                </li>
+              </ul>
+
+              <ul className="mt-5 flex gap-2">
+                {socialLinks.map((social) => (
+                  <li key={social.label}>
                     <a
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-ink-300 underline-offset-4 transition-colors hover:text-gold-300 hover:underline"
+                      aria-label={social.label}
+                      className="grid size-11 place-items-center rounded-full bg-brand-50 text-brand-600 transition-colors hover:bg-brand-600 hover:text-white"
                     >
-                      {social.label}
+                      <SocialIcon name={social.icon} />
                     </a>
-                  </motion.li>
+                  </li>
                 ))}
               </ul>
-              <p className="mt-4 text-xs leading-relaxed text-ink-500">{site.address}</p>
             </div>
           </motion.div>
         </div>

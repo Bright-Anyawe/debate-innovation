@@ -1,25 +1,32 @@
-import { MediaPreview } from "@/components/home/MediaPreview";
-import { MissionPreview } from "@/components/home/MissionPreview";
-import { ProgramsPreview } from "@/components/home/ProgramsPreview";
-import { SupportCta } from "@/components/home/SupportCta";
-import { Hero } from "@/components/sections/Hero";
+import { AboutIntro } from "@/components/sections/AboutIntro";
+import { GalleryPreview } from "@/components/sections/GalleryPreview";
+import { HeroSlider } from "@/components/sections/HeroSlider";
+import { LogoMarquee } from "@/components/sections/LogoMarquee";
+import { MotionsBand } from "@/components/sections/MotionsBand";
+import { NewsGrid } from "@/components/sections/NewsGrid";
+import { StaffCarousel } from "@/components/sections/StaffCarousel";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { VideoFeature } from "@/components/sections/VideoFeature";
+import { videoClips } from "@/lib/video-data";
 
 /**
  * Home page.
  *
- * Each nav destination is a real route, so this page teases rather than
- * duplicates: the previews summarise and link out, and the full content lives
- * on /mission, /programs, /media, and /contact. Repeating those sections here
- * verbatim would split the same copy across two indexable URLs.
+ * A server component composing self-contained sections. Each owns its own
+ * client boundary, so only the genuinely interactive parts ship JavaScript.
  */
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <MissionPreview />
-      <ProgramsPreview />
-      <MediaPreview />
-      <SupportCta />
+      <HeroSlider />
+      <MotionsBand />
+      <AboutIntro />
+      <VideoFeature clips={videoClips} />
+      <GalleryPreview />
+      <StaffCarousel />
+      <Testimonials />
+      <LogoMarquee />
+      <NewsGrid />
     </>
   );
 }

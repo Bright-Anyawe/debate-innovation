@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
 import { fieldError, springSoft } from "@/lib/motion";
 import { FIELD_LIMITS, validateField, type ContactErrors, type ContactInput } from "@/lib/contact-schema";
 import { contactTopics } from "@/lib/site-data";
@@ -104,24 +104,24 @@ export function ContactForm() {
         animate={{ opacity: 1, scale: 1 }}
         transition={springSoft}
         role="status"
-        className="flex min-h-[28rem] flex-col items-center justify-center rounded-3xl border border-forest-500/30 bg-forest-500/8 p-10 text-center"
+        className="flex min-h-[28rem] flex-col items-center justify-center rounded-3xl border border-brand-200 bg-brand-50 p-10 text-center"
       >
         <motion.span
           initial={{ scale: 0, rotate: -30 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ ...springSoft, delay: 0.1 }}
-          className="grid size-16 place-items-center rounded-full border border-forest-400/40 bg-forest-500/15 text-forest-300"
+          className="grid size-16 place-items-center rounded-full bg-brand-500 text-white shadow-card"
         >
           <CircleCheck className="size-8" aria-hidden="true" />
         </motion.span>
 
         <h3 className="mt-6 text-2xl">Message received</h3>
-        <p className="mt-3 max-w-sm text-[0.9375rem] leading-relaxed text-ink-300">
+        <p className="mt-3 max-w-sm text-[0.9375rem] leading-relaxed text-ink-600">
           {formMessage} We reply to everything within two working days — usually sooner.
         </p>
 
-        <MagneticButton
-          variant="secondary"
+        <Button
+          variant="outline"
           className="mt-8"
           strength={8}
           onClick={() => {
@@ -130,7 +130,7 @@ export function ContactForm() {
           }}
         >
           Send another message
-        </MagneticButton>
+        </Button>
       </motion.div>
     );
   }
@@ -139,7 +139,7 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-3xl border border-ink-100/8 bg-ink-900/60 p-6 backdrop-blur-sm sm:p-8"
+      className="rounded-3xl border border-ink-100 bg-white p-6 shadow-card sm:p-8"
     >
       {/* Honeypot. Hidden from sighted users and from screen readers alike, and
           skipped by the tab order — only a form-filling bot will populate it. */}
@@ -231,7 +231,7 @@ export function ContactForm() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="mt-5 flex items-start gap-2.5 rounded-2xl border border-crimson-500/30 bg-crimson-500/10 p-3.5 text-sm text-crimson-300"
+            className="mt-5 flex items-start gap-2.5 rounded-2xl border border-ghana-red/25 bg-ghana-red/8 p-3.5 text-sm text-ghana-red"
           >
             <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             {formMessage}
@@ -240,7 +240,7 @@ export function ContactForm() {
       </AnimatePresence>
 
       <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <MagneticButton type="submit" size="lg" disabled={status === "submitting"}>
+        <Button type="submit" size="lg" disabled={status === "submitting"}>
           {status === "submitting" ? (
             <>
               <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
@@ -252,7 +252,7 @@ export function ContactForm() {
               <Send className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" aria-hidden="true" />
             </>
           )}
-        </MagneticButton>
+        </Button>
 
         <p className="text-xs leading-relaxed text-ink-500 sm:max-w-[16rem] sm:text-right">
           We use your details only to reply. We never sell or share them.
@@ -268,11 +268,11 @@ export function ContactForm() {
 
 function inputClasses(hasError: boolean, extra = ""): string {
   return cn(
-    "min-h-14 w-full rounded-2xl border bg-ink-100/[0.03] px-4 text-[0.9375rem] text-ink-100 transition-colors duration-200",
-    "placeholder:text-ink-500 focus:bg-ink-100/[0.06]",
+    "min-h-14 w-full rounded-2xl border bg-surface-soft px-4 text-[0.9375rem] text-deep-700 transition-colors duration-200",
+    "placeholder:text-ink-500 focus:bg-white",
     hasError
-      ? "border-crimson-500/60 focus:border-crimson-400"
-      : "border-ink-100/10 hover:border-ink-100/20 focus:border-gold-400/60",
+      ? "border-ghana-red/60 focus:border-ghana-red"
+      : "border-ink-200 hover:border-ink-300 focus:border-brand-400",
     extra,
   );
 }
@@ -287,7 +287,7 @@ interface FieldShellProps {
 function FieldShell({ id, label, error, children }: FieldShellProps) {
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-ink-200">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-deep-700">
         {label}
       </label>
       {children}
@@ -299,7 +299,7 @@ function FieldShell({ id, label, error, children }: FieldShellProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="mt-2 flex items-center gap-1.5 text-sm text-crimson-300"
+            className="mt-2 flex items-center gap-1.5 text-sm text-ghana-red"
           >
             <CircleAlert className="size-3.5 shrink-0" aria-hidden="true" />
             {error}

@@ -1,89 +1,91 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
-import { Adinkra, AdinkraField } from "@/components/ui/Adinkra";
-import { KenteDivider } from "@/components/ui/KenteDivider";
+import { AdinkraField } from "@/components/ui/Adinkra";
+import { GhanaAccent } from "@/components/ui/Brand";
 import { fadeUp, staggerContainer, wordReveal } from "@/lib/motion";
-import type { AdinkraSymbol, PageIntro } from "@/lib/site-data";
+import type { PageIntro } from "@/lib/site-data";
 
 interface PageHeroProps {
   intro: PageIntro;
-  /** Decorative watermark for the route. */
-  symbol: AdinkraSymbol;
+  /** Trail shown above the title. The current page is appended automatically. */
+  breadcrumb?: { label: string; href: string }[];
 }
 
 /**
- * Heading band at the top of every route below the home page.
+ * Banner at the top of every route below the home page.
  *
- * Deliberately shorter than the home hero — it orients rather than sells, so it
- * clears the fixed header without pushing the actual content below the fold.
+ * Shorter than the home hero — it orients rather than sells, and carries the
+ * breadcrumb so a visitor always knows where they landed.
  */
-export function PageHero({ intro, symbol }: PageHeroProps) {
-  const highlightWords = new Set(
-    intro.highlight
-      ? intro.highlight
-          .toLowerCase()
-          .split(/\s+/)
-          .filter(Boolean)
-      : [],
-  );
-
+export function PageHero({ intro, breadcrumb = [] }: PageHeroProps) {
   return (
-    <section className="relative isolate overflow-hidden pb-4 pt-32 sm:pt-40">
+    <section className="relative isolate overflow-hidden bg-surface-tint">
+      <AdinkraField className="text-brand-600" opacity={0.06} />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(100%_70%_at_20%_0%,var(--color-ink-850),var(--color-ink-950)_65%)]"
-      />
-      <AdinkraField className="text-gold-300" opacity={0.04} />
-      <Adinkra
-        symbol={symbol}
-        className="pointer-events-none absolute -right-16 -top-8 size-72 text-gold-500/[0.06] sm:size-96"
-        strokeWidth={3}
+        className="absolute -right-20 -top-24 size-96 rounded-full bg-white/50 blur-3xl"
       />
 
-      <div className="container-page relative">
+      <div className="container-page relative py-14 sm:py-20">
         <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="max-w-3xl">
-          <motion.p variants={fadeUp} className="eyebrow">
-            <span aria-hidden="true" className="h-px w-8 bg-gold-500/60" />
-            {intro.eyebrow}
-          </motion.p>
+          <motion.nav variants={fadeUp} aria-label="Breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1 text-sm text-ink-500">
+              <li>
+                <Link href="/" className="inline-flex min-h-11 items-center transition-colors hover:text-brand-600">
+                  Home
+                </Link>
+              </li>
+              {breadcrumb.map((crumb) => (
+                <li key={crumb.href} className="flex items-center gap-1">
+                  <ChevronRight className="size-3.5 text-ink-300" aria-hidden="true" />
+                  <Link
+                    href={crumb.href}
+                    className="inline-flex min-h-11 items-center transition-colors hover:text-brand-600"
+                  >
+                    {crumb.label}
+                  </Link>
+                </li>
+              ))}
+              <li className="flex items-center gap-1">
+                <ChevronRight className="size-3.5 text-ink-300" aria-hidden="true" />
+                <span aria-current="page" className="font-medium text-deep-700">
+                  {intro.metaTitle}
+                </span>
+              </li>
+            </ol>
+          </motion.nav>
+
+          <motion.div variants={fadeUp} className="mt-6 flex items-center gap-3">
+            <GhanaAccent />
+            <span className="script-eyebrow">{intro.script}</span>
+          </motion.div>
 
           <motion.h1
             variants={staggerContainer}
-            className="mt-5 text-section leading-[1.02]"
+            className="mt-1 text-section leading-[1.04]"
             style={{ perspective: 800 }}
           >
-            {intro.title.split(" ").map((word, index) => {
-              const normalised = word.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
-
-              return (
-                <span
-                  key={`${word}-${index}`}
-                  className="inline-block overflow-hidden pb-[0.06em] align-bottom"
-                >
-                  <motion.span
-                    variants={wordReveal}
-                    className={
-                      highlightWords.has(normalised)
-                        ? "inline-block text-gradient-gold italic"
-                        : "inline-block"
-                    }
-                  >
-                    {word}
-                  </motion.span>
-                  <span className="inline-block">&nbsp;</span>
-                </span>
-              );
-            })}
+            {intro.title.split(" ").map((word, index) => (
+              <span
+                key={`${word}-${index}`}
+                className="inline-block overflow-hidden pb-[0.08em] align-bottom"
+              >
+                <motion.span variants={wordReveal} className="inline-block">
+                  {word}
+                </motion.span>
+                <span className="inline-block">&nbsp;</span>
+              </span>
+            ))}
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="mt-6 text-lede leading-relaxed text-ink-300">
+          <motion.p variants={fadeUp} className="mt-5 text-lede leading-relaxed text-ink-600">
             {intro.lede}
           </motion.p>
         </motion.div>
-
-        <KenteDivider className="mt-14 sm:mt-16" />
       </div>
     </section>
   );

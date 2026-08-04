@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Heart, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { fieldError } from "@/lib/motion";
 import { donationTiers } from "@/lib/site-data";
@@ -15,9 +15,9 @@ type Frequency = "once" | "monthly";
 const MIN_AMOUNT = 10;
 const MAX_AMOUNT = 500_000;
 
-const currency = new Intl.NumberFormat("en-GH", {
+const currency = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "GHS",
+  currency: "USD",
   maximumFractionDigits: 0,
 });
 
@@ -27,7 +27,7 @@ const currency = new Intl.NumberFormat("en-GH", {
  * Collects intent only — amount and frequency — and hands off to a hosted,
  * PCI-compliant payment page. No card or mobile-money credentials are ever
  * entered into this application. Wire `handoffToCheckout` to your provider
- * (Paystack and Flutterwave both support GHS mobile money and cards).
+ * (Stripe, Donorbox, and Givebutter all suit a US-registered 501(c)(3)).
  */
 export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [frequency, setFrequency] = useState<Frequency>("once");
@@ -68,7 +68,7 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
       return;
     }
     if (amount > MAX_AMOUNT) {
-      setError("For gifts above GH₵500,000 please contact us directly so we can assist.");
+      setError("For gifts above $500,000 please contact us directly so we can assist.");
       return;
     }
 
@@ -84,15 +84,15 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Fund a young Ghanaian voice"
-      description="Every cedi goes to coaching, travel, and materials. We publish the full breakdown each term."
+      title="Fund a young African voice"
+      description="Every dollar goes to coaching, travel, and materials. We publish the full breakdown each term."
     >
       <form onSubmit={handoffToCheckout} className="space-y-7">
         <fieldset>
           <legend className="sr-only">Giving frequency</legend>
           <div
             role="group"
-            className="grid grid-cols-2 gap-1 rounded-full border border-ink-100/10 bg-ink-950/60 p-1"
+            className="grid grid-cols-2 gap-1 rounded-full border border-ink-200 bg-surface-soft p-1"
           >
             {(["once", "monthly"] as const).map((option) => {
               const isActive = frequency === option;
@@ -104,13 +104,13 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   aria-pressed={isActive}
                   className={cn(
                     "relative min-h-11 rounded-full text-sm font-semibold transition-colors",
-                    isActive ? "text-ink-950" : "text-ink-400 hover:text-ink-100",
+                    isActive ? "text-white" : "text-ink-500 hover:text-deep-700",
                   )}
                 >
                   {isActive ? (
                     <motion.span
                       layoutId="donation-frequency-pill"
-                      className="absolute inset-0 rounded-full bg-gold-400"
+                      className="absolute inset-0 rounded-full bg-brand-500"
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     />
                   ) : null}
@@ -124,17 +124,17 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
         </fieldset>
 
         <fieldset>
-          <legend className="mb-3 text-sm font-semibold text-ink-100">Choose an amount</legend>
+          <legend className="mb-3 text-sm font-semibold text-deep-700">Choose an amount</legend>
           <div className="grid grid-cols-2 gap-2.5">
             {donationTiers.map((tier) => (
               <label
                 key={tier.amount}
                 className={cn(
                   "relative flex min-h-14 cursor-pointer items-center justify-center rounded-2xl border text-base font-semibold transition-all duration-200",
-                  "has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-gold-400",
+                  "has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand-500",
                   selectedTier === tier.amount
-                    ? "border-gold-400 bg-gold-400/12 text-gold-200"
-                    : "border-ink-100/10 bg-ink-100/[0.03] text-ink-200 hover:border-ink-100/25 hover:bg-ink-100/[0.06]",
+                    ? "border-brand-500 bg-brand-50 text-brand-700"
+                    : "border-ink-200 bg-white text-ink-600 hover:border-brand-300 hover:bg-brand-50/60",
                 )}
               >
                 <input
@@ -152,14 +152,14 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
           <div className="mt-3">
             <label htmlFor="custom-amount" className="sr-only">
-              Or enter a custom amount in Ghana cedis
+              Or enter a custom amount in US dollars
             </label>
             <div className="relative">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-ink-400"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-ink-500"
               >
-                GH₵
+                $
               </span>
               <input
                 id="custom-amount"
@@ -172,7 +172,7 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
                 onChange={(event) => handleCustomChange(event.target.value)}
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? "donation-error" : undefined}
-                className="min-h-14 w-full rounded-2xl border border-ink-100/10 bg-ink-100/[0.03] pl-14 pr-4 text-base text-ink-100 placeholder:text-ink-500 transition-colors focus:border-gold-400/60 focus:bg-ink-100/[0.06]"
+                className="min-h-14 w-full rounded-2xl border border-ink-200 bg-surface-soft pl-11 pr-4 text-base text-deep-700 placeholder:text-ink-500 transition-colors focus:border-brand-400 focus:bg-white"
               />
             </div>
           </div>
@@ -188,7 +188,7 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="text-sm font-medium text-crimson-300"
+              className="text-sm font-medium text-ghana-red"
             >
               {error}
             </motion.p>
@@ -199,7 +199,7 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="flex items-start gap-2.5 rounded-2xl border border-forest-500/25 bg-forest-500/8 p-3.5 text-sm leading-relaxed text-forest-300"
+              className="flex items-start gap-2.5 rounded-2xl border border-brand-200 bg-brand-50 p-3.5 text-sm leading-relaxed text-brand-800"
             >
               <Heart className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <span>
@@ -211,14 +211,14 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
         </AnimatePresence>
 
         <div className="space-y-3">
-          <MagneticButton type="submit" size="lg" className="w-full">
+          <Button type="submit" size="lg" className="w-full">
             Continue to secure checkout
             <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
-          </MagneticButton>
+          </Button>
 
           <p className="flex items-center justify-center gap-2 text-xs text-ink-500">
             <ShieldCheck className="size-3.5" aria-hidden="true" />
-            Card and mobile money handled by our payment provider — never on this site.
+            Payment details are handled by our provider — never entered on this site.
           </p>
         </div>
       </form>

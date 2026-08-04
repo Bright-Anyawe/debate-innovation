@@ -18,11 +18,11 @@ const SPAN_CLASSES: Record<NonNullable<GalleryItem["span"]>, string> = {
 };
 
 /**
- * Filterable media gallery.
+ * Filterable gallery.
  *
  * `layout` on each tile plus `AnimatePresence mode="popLayout"` means filtering
- * reflows the grid as a continuous movement — surviving tiles slide to their new
- * positions instead of the grid snapping.
+ * reflows the grid as one continuous movement — surviving tiles slide to their
+ * new positions instead of the grid snapping.
  */
 export function GalleryGrid() {
   const [filter, setFilter] = useState<Filter>("All");
@@ -45,26 +45,26 @@ export function GalleryGrid() {
               onClick={() => setFilter(option)}
               aria-pressed={isActive}
               className={cn(
-                "relative min-h-11 rounded-full border px-5 text-sm font-medium transition-colors duration-300",
+                "pill relative min-h-11 border px-5 text-sm",
                 isActive
-                  ? "border-gold-400/50 text-gold-200"
-                  : "border-ink-100/10 text-ink-400 hover:border-ink-100/25 hover:text-ink-100",
+                  ? "border-transparent text-white"
+                  : "border-ink-200 bg-white text-ink-600 hover:border-brand-300 hover:text-brand-700",
               )}
             >
               {isActive ? (
                 <motion.span
                   layoutId="gallery-filter-pill"
-                  className="absolute inset-0 rounded-full bg-gold-400/12"
+                  className="absolute inset-0 -z-10 rounded-full bg-brand-500"
                   transition={{ type: "spring", stiffness: 380, damping: 34 }}
                 />
               ) : null}
-              <span className="relative z-10">{option}</span>
+              {option}
             </button>
           );
         })}
       </div>
 
-      {/* Announce result counts for screen-reader users after a filter change. */}
+      {/* Announce result counts after a filter change. */}
       <p aria-live="polite" className="sr-only">
         {visibleItems.length} {visibleItems.length === 1 ? "item" : "items"} shown
         {filter === "All" ? "" : ` in ${filter}`}.
@@ -72,7 +72,7 @@ export function GalleryGrid() {
 
       <motion.ul
         layout
-        className="mt-8 grid auto-rows-[13rem] grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
+        className="mt-8 grid auto-rows-[13rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         <AnimatePresence mode="popLayout">
           {visibleItems.map((item) => (

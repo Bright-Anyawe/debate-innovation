@@ -1,66 +1,72 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Design tokens — "Kente Nightfall"
-   A charcoal foundation carrying Ghanaian heritage accents: warm gold,
-   bronze/crimson kente highlights, and a grounded forest green.
+   Design tokens — Debate Innovation brand
+   Light, open, and optimistic: a bright cyan primary against deep teal for
+   weight, with Ghana's flag reserved for accent moments only.
    ========================================================================== */
 
 @theme {
-  /* --- Foundation: deep charcoal / slate ------------------------------- */
-  --color-ink-950: #08090a;
-  --color-ink-900: #0d1012;
-  --color-ink-850: #12171a;
-  --color-ink-800: #191f22;
-  --color-ink-700: #242c30;
-  --color-ink-600: #364146;
-  --color-ink-500: #4d5a60;
-  --color-ink-400: #7b878d;
-  --color-ink-300: #a8b2b7;
-  --color-ink-200: #cbd3d6;
-  --color-ink-100: #e9eef0;
+  /* --- Brand cyan (primary) ------------------------------------------- */
+  --color-brand-50: #eff9fd;
+  --color-brand-100: #d8f0f9;
+  --color-brand-200: #ade0f1;
+  --color-brand-300: #78cae6;
+  --color-brand-400: #47b5d9;
+  --color-brand-500: #22a9cc;
+  --color-brand-600: #1888a8;
+  --color-brand-700: #166e88;
+  --color-brand-800: #185a70;
+  --color-brand-900: #184b5e;
 
-  /* --- Heritage gold (primary accent) --------------------------------- */
-  --color-gold-200: #fbecc4;
-  --color-gold-300: #f5d98b;
-  --color-gold-400: #efc45c;
-  --color-gold-500: #d9a441;
-  --color-gold-600: #b5842c;
-  --color-gold-700: #8a631f;
+  /* --- Deep teal (headings, primary buttons) --------------------------- */
+  --color-deep-400: #2c6d7c;
+  --color-deep-500: #1d5766;
+  --color-deep-600: #144552;
+  --color-deep-700: #0e3b45;
+  --color-deep-800: #0a2c34;
+  --color-deep-900: #061e24;
 
-  /* --- Kente bronze --------------------------------------------------- */
-  --color-bronze-300: #ddab77;
-  --color-bronze-400: #c98a4b;
-  --color-bronze-500: #a9682f;
-  --color-bronze-600: #834f23;
+  /* --- Neutrals -------------------------------------------------------- */
+  --color-ink-900: #0f2830;
+  --color-ink-800: #1d3b45;
+  --color-ink-700: #33525d;
+  --color-ink-600: #4e6771;
+  --color-ink-500: #5a7079;
+  --color-ink-400: #8399a1;
+  --color-ink-300: #b6c7cd;
+  --color-ink-200: #d7e3e8;
+  --color-ink-100: #e9f1f4;
+  --color-ink-50: #f4f9fb;
 
-  /* --- Kente crimson -------------------------------------------------- */
-  --color-crimson-300: #ec7d7e;
-  --color-crimson-400: #d8484a;
-  --color-crimson-500: #b02f31;
-  --color-crimson-600: #8c2325;
+  /* --- Surfaces -------------------------------------------------------- */
+  --color-surface: #ffffff;
+  --color-surface-tint: #e9f5fa;
+  --color-surface-soft: #f6fbfd;
 
-  /* --- Forest green --------------------------------------------------- */
-  --color-forest-300: #62c294;
-  --color-forest-400: #34a06a;
-  --color-forest-500: #1e7a4c;
-  --color-forest-600: #145c39;
+  /* --- Ghana flag (accent only — never a background wash) --------------- */
+  --color-ghana-red: #ce1126;
+  --color-ghana-gold: #fcd116;
+  --color-ghana-green: #006b3f;
+
+  /* --- Support --------------------------------------------------------- */
+  --color-star: #f5a623;
 
   /* --- Typography ------------------------------------------------------ */
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-yellowtail), ui-serif, cursive;
 
-  --text-hero: clamp(2.75rem, 1.2rem + 6.4vw, 6.5rem);
-  --text-section: clamp(2rem, 1.1rem + 3.4vw, 3.75rem);
-  --text-lede: clamp(1.0625rem, 0.98rem + 0.45vw, 1.3125rem);
+  --text-hero: clamp(2.5rem, 1.3rem + 4.6vw, 4.75rem);
+  --text-section: clamp(2rem, 1.2rem + 2.9vw, 3.5rem);
+  --text-lede: clamp(1rem, 0.95rem + 0.24vw, 1.125rem);
 
   /* --- Rhythm ---------------------------------------------------------- */
-  --spacing-section: clamp(4.5rem, 3rem + 6vw, 9rem);
+  --spacing-section: clamp(4rem, 2.8rem + 5vw, 8rem);
   --spacing-gutter: clamp(1.25rem, 0.5rem + 3vw, 4rem);
 
   /* --- Motion ---------------------------------------------------------- */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-kente: cubic-bezier(0.34, 1.36, 0.44, 1);
 }
 
 /* ==========================================================================
@@ -68,32 +74,27 @@
    ========================================================================== */
 
 @layer base {
-  * {
-    border-color: --alpha(var(--color-ink-100) / 8%);
-  }
-
   html,
   body {
     /*
      * `clip`, not `hidden`. Off-screen slide-in reveals start translated
      * horizontally and would otherwise widen the document. `overflow-x: hidden`
      * would also clip them — but it turns the element into a scroll container,
-     * which silently breaks every `position: sticky` descendant. `clip` cuts the
-     * overflow without creating one.
+     * which silently breaks every `position: sticky` descendant.
      */
     overflow-x: clip;
   }
 
   html {
     scroll-behavior: smooth;
-    /* Offset anchor targets so the sticky header never covers a heading. */
-    scroll-padding-top: 6rem;
+    /* Offset anchor targets so the fixed header never covers a heading. */
+    scroll-padding-top: 8rem;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    background-color: var(--color-ink-950);
-    color: var(--color-ink-200);
+    background-color: var(--color-surface);
+    color: var(--color-ink-600);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
@@ -105,9 +106,9 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    color: var(--color-ink-100);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    color: var(--color-deep-700);
+    font-weight: 700;
+    letter-spacing: -0.025em;
     text-wrap: balance;
   }
 
@@ -115,22 +116,21 @@
     text-wrap: pretty;
   }
 
-  /* A single, consistent, high-contrast focus ring across the whole site. */
+  /* One consistent, high-contrast focus ring across the whole site. */
   :focus-visible {
-    outline: 2px solid var(--color-gold-400);
+    outline: 2px solid var(--color-brand-600);
     outline-offset: 3px;
     border-radius: 4px;
   }
 
   ::selection {
-    background-color: var(--color-gold-500);
-    color: var(--color-ink-950);
+    background-color: var(--color-brand-500);
+    color: #fff;
   }
 
-  /* Firefox scrollbar. Chromium equivalent below. */
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-ink-700) transparent;
+    scrollbar-color: var(--color-ink-300) transparent;
   }
 
   ::-webkit-scrollbar {
@@ -139,9 +139,9 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: var(--color-ink-700);
+    background-color: var(--color-ink-300);
     border-radius: 999px;
-    border: 3px solid var(--color-ink-950);
+    border: 3px solid var(--color-surface);
   }
 }
 
@@ -152,94 +152,90 @@
 @utility container-page {
   width: 100%;
   margin-inline: auto;
-  max-width: 84rem;
+  max-width: 82rem;
   padding-inline: var(--spacing-gutter);
 }
 
-/* Eyebrow label used above every section heading. */
-@utility eyebrow {
+/* The script line that sits above every section heading. */
+@utility script-eyebrow {
+  font-family: var(--font-script);
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
+  line-height: 1.2;
+  /* brand-700, not 600: the script sits at 22px regular, which is below the
+     WCAG large-text threshold, so it needs the full 4.5:1 against white. */
+  color: var(--color-brand-700);
+  font-weight: 400;
+  /* Yellowtail's ascenders clip without a little breathing room. */
+  padding-block: 0.12em;
+}
+
+/* Pill button shared geometry. */
+@utility pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  font-size: 0.6875rem;
+  justify-content: center;
+  gap: 0.625rem;
+  border-radius: 999px;
   font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-gold-400);
+  white-space: nowrap;
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-duration: 300ms;
+  transition-timing-function: var(--ease-out-expo);
 }
 
-/* Gold gradient text for emphasised words in headings. */
-@utility text-gradient-gold {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-gold-300) 0%,
-    var(--color-gold-500) 42%,
-    var(--color-bronze-400) 100%
-  );
-  background-clip: text;
-  color: transparent;
-  /* Keeps descenders from being clipped by background-clip. */
-  padding-bottom: 0.06em;
+/* Soft elevation used on cards — deliberately blue-tinted, not grey. */
+@utility shadow-card {
+  box-shadow:
+    0 1px 2px --alpha(var(--color-deep-900) / 4%),
+    0 12px 32px -12px --alpha(var(--color-deep-800) / 14%);
 }
 
-/* Raised charcoal surface with a hairline top highlight. */
-@utility surface-card {
-  background-image: linear-gradient(
-    to bottom,
-    --alpha(var(--color-ink-100) / 6%),
-    --alpha(var(--color-ink-100) / 2%)
-  );
-  border: 1px solid --alpha(var(--color-ink-100) / 8%);
-  backdrop-filter: blur(12px);
-}
-
-/* Film grain over the page — adds warmth so flat charcoal never reads as dead. */
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.3;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+@utility shadow-card-lifted {
+  box-shadow:
+    0 2px 4px --alpha(var(--color-deep-900) / 5%),
+    0 28px 56px -20px --alpha(var(--color-deep-800) / 22%);
 }
 
 /* ==========================================================================
-   Keyframes — background atmosphere only. Everything interactive uses
-   Framer Motion so it can be centrally disabled for reduced-motion users.
+   Decorative animations
    ========================================================================== */
 
-@keyframes aurora-drift {
+@keyframes float-soft {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(4%, -6%, 0) scale(1.12);
+    transform: translate3d(0, -14px, 0);
   }
 }
 
-@keyframes kente-slide {
+@keyframes marquee-scroll {
   from {
-    background-position: 0 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
-    background-position: 120px 0;
+    /* The track renders its children twice; -50% loops seamlessly. */
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-.animate-aurora {
-  animation: aurora-drift 22s var(--ease-out-expo) infinite;
+.animate-float {
+  animation: float-soft 6s ease-in-out infinite;
   will-change: transform;
 }
 
-.animate-aurora-slow {
-  animation: aurora-drift 30s var(--ease-out-expo) infinite reverse;
+.animate-marquee {
+  animation: marquee-scroll 38s linear infinite;
   will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* ==========================================================================
-   Reduced motion — one global escape hatch.
+   Reduced motion
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {

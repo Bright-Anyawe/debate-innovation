@@ -10,17 +10,13 @@ export const metadata: Metadata = {
   title: intro.metaTitle,
   description: intro.metaDescription,
   alternates: { canonical: "/contact" },
-  openGraph: {
-    title: intro.metaTitle,
-    description: intro.metaDescription,
-    url: "/contact",
-  },
+  openGraph: { title: intro.metaTitle, description: intro.metaDescription, url: "/contact" },
 };
 
 export default function ContactPage() {
   return (
     <>
-      <PageHero intro={intro} symbol="eban" />
+      <PageHero intro={intro} />
       <Contact />
     </>
   );

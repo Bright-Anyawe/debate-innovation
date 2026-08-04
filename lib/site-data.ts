@@ -1,12 +1,11 @@
 import type { IconName } from "@/lib/icons";
 
 /**
- * Single source of truth for all page content.
+ * Single source of truth for site content.
  *
- * Everything here is plain serialisable data with no React or framework
- * coupling, so it can be swapped for a CMS/API response without touching a
- * component. Replace the placeholder copy, metrics, and contact details with
- * the organisation's real figures before launch.
+ * Plain serialisable data with no React coupling, so a CMS response can replace
+ * it one-for-one. Copy here follows debateinnovation.org, with obvious
+ * typographic errors on the live site corrected ("reputed", "Modern Ghana").
  */
 
 /* -------------------------------------------------------------------------- */
@@ -15,341 +14,353 @@ import type { IconName } from "@/lib/icons";
 
 export const site = {
   name: "Debate Innovation",
-  tagline: "Ghana's youth speak. The continent listens.",
+  shortName: "Di",
+  tagline: "Sponsor the next generation of leaders — one debate at a time",
   description:
-    "Debate Innovation equips young Ghanaians with the argument, research, and public-speaking skills to lead conversations that shape their communities.",
+    "An exclusive platform for students in Africa, offering a space for constructive and meaningful dialogue on crucial issues that impact us all.",
   url: "https://debateinnovation.org",
-  email: "hello@debateinnovation.org",
-  phone: "+233 30 000 0000",
-  address: "Ring Road Central, Accra, Greater Accra, Ghana",
+  email: "Emmanuel@debateinnovation.org",
+  phone: "+1 954 288 5414",
+  address: "Fort Lauderdale, Florida, USA",
+  hours: "24/7",
 } as const;
+
+export const socialLinks = [
+  { label: "Facebook", href: "https://facebook.com", icon: "facebook" },
+  { label: "TikTok", href: "https://tiktok.com", icon: "tiktok" },
+  { label: "WhatsApp", href: "https://wa.me/19542885414", icon: "whatsapp" },
+  { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
+] as const;
+
+/* -------------------------------------------------------------------------- */
+/* Navigation                                                                 */
+/* -------------------------------------------------------------------------- */
 
 export interface NavLink {
   readonly label: string;
   readonly href: string;
-  /** Extra path prefixes that should light this item up, e.g. /news under Media. */
+  /** Extra path prefixes that should mark this item current, e.g. /news. */
   readonly activeFor?: readonly string[];
+  /** Renders as a dropdown when present. */
+  readonly children?: readonly { readonly label: string; readonly href: string }[];
 }
 
 export const navLinks: readonly NavLink[] = [
-  { label: "Mission", href: "/mission" },
-  { label: "Programs", href: "/programs" },
-  { label: "Media", href: "/media", activeFor: ["/news"] },
-  { label: "Contact", href: "/contact" },
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Informational Package", href: "/informational-package" },
+  { label: "Tournament Info", href: "/tournaments" },
+  {
+    label: "Pages",
+    href: "/gallery",
+    activeFor: ["/news"],
+    children: [
+      { label: "Gallery", href: "/gallery" },
+      { label: "News & Articles", href: "/news" },
+    ],
+  },
+  { label: "Contact Us", href: "/contact" },
 ];
+
+export const footerLinks = [
+  { label: "Home", href: "/" },
+  { label: "About us", href: "/about" },
+  { label: "Our Programs", href: "/tournaments" },
+  { label: "News & Articles", href: "/news" },
+  { label: "Contact Us", href: "/contact" },
+] as const;
 
 /**
  * Returns true when `pathname` belongs to `link` — an exact match, a nested
- * route beneath it, or one of the link's declared extra prefixes.
+ * route beneath it, one of its declared prefixes, or any of its children.
  */
 export function isNavLinkActive(link: NavLink, pathname: string): boolean {
-  const prefixes = [link.href, ...(link.activeFor ?? [])];
+  if (link.href === "/") return pathname === "/";
+
+  const prefixes = [
+    link.href,
+    ...(link.activeFor ?? []),
+    ...(link.children?.map((child) => child.href) ?? []),
+  ];
+
   return prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
 /* -------------------------------------------------------------------------- */
-/* Page intros — the heading block at the top of each route                   */
+/* Page intros                                                                */
 /* -------------------------------------------------------------------------- */
 
 export interface PageIntro {
-  readonly eyebrow: string;
+  readonly script: string;
   readonly title: string;
-  /** Words rendered in the gold gradient. Case-insensitive, matched per word. */
-  readonly highlight?: string;
   readonly lede: string;
   readonly metaTitle: string;
   readonly metaDescription: string;
 }
 
 export const pageIntros = {
-  mission: {
-    eyebrow: "Mission & Vision",
-    title: "We build the next generation of Ghanaian voices",
-    highlight: "Ghanaian voices",
-    lede:
-      "Debate is not a hobby here. It is how a young person learns to research a claim, hold a room, disagree without contempt, and turn a good argument into a better community.",
-    metaTitle: "Mission & Vision",
+  about: {
+    script: "Welcome To Debate Innovation",
+    title: "We are a world-reputed debate organisation",
+    lede: site.description,
+    metaTitle: "About Us",
     metaDescription:
-      "Why Debate Innovation exists, the values we coach against, and the Ghana we are building toward.",
+      "Debate Innovation is a 501(c)(3) non-profit bringing together the brightest young minds across Africa for thoughtful, structured debate.",
   },
-  programs: {
-    eyebrow: "Programs & Events",
-    title: "Three tracks, one pipeline",
-    highlight: "one pipeline",
-    lede:
-      "A student can enter at fourteen in a school hall and leave at twenty-two coaching the cohort behind them. These are the rungs in between.",
-    metaTitle: "Programs & Events",
+  informational: {
+    script: "Empowering Voices",
+    title: "Informational Package",
+    lede: "Empowering Voices. Shaping Leaders. Transforming Minds.",
+    metaTitle: "Informational Package",
     metaDescription:
-      "Workshops, tournaments, and leadership tracks for young debaters across all sixteen regions of Ghana.",
+      "Who we are, what we do, who we serve, and the impact Debate Innovation has had across schools in Ghana.",
   },
-  media: {
-    eyebrow: "Media & News",
-    title: "What the work actually looks like",
-    highlight: "actually looks",
-    lede:
-      "Halls in Wa and Ho, week-three warrant drills, alumni presenting to their district assembly. No stock photography — every frame is one of our rooms.",
-    metaTitle: "Media & News",
+  tournaments: {
+    script: "Official Program",
+    title: "Tournament information",
+    lede: "Championships, regional legs, and the workshops that prepare students for them — all entry-free, with travel covered.",
+    metaTitle: "Tournament Info",
     metaDescription:
-      "Photography, reports, and updates from Debate Innovation tournaments, workshops, and alumni.",
+      "Debate Innovation tournaments, workshops, and leadership tracks for students across Ghana.",
+  },
+  gallery: {
+    script: "Official Program",
+    title: "Recent gallery",
+    lede: "Championship halls, certificate ceremonies, and the classrooms where the work actually happens.",
+    metaTitle: "Gallery",
+    metaDescription:
+      "Photography from Debate Innovation tournaments, workshops, and award ceremonies.",
   },
   news: {
-    eyebrow: "Newsroom",
-    title: "We publish the numbers, not just the wins",
-    highlight: "the numbers,",
-    lede:
-      "Budgets, alumni outcomes, and what we got wrong last season. If you are deciding whether to fund us, start here.",
-    metaTitle: "News & Updates",
-    metaDescription:
-      "Announcements, transparency reports, and impact findings from Debate Innovation.",
+    script: "Our Blogs",
+    title: "News & articles",
+    lede: "Coverage of our tournaments, announcements for the season ahead, and what we are learning as we grow.",
+    metaTitle: "News & Articles",
+    metaDescription: "The latest news, press coverage, and announcements from Debate Innovation.",
   },
   contact: {
-    eyebrow: "Contact & Support",
-    title: "Start a chapter, fund a season, or just ask",
-    highlight: "fund a season",
-    lede:
-      "Schools, funders, volunteers, journalists — this form reaches a person, not a queue.",
-    metaTitle: "Contact & Support",
+    script: "Get In Touch",
+    title: "Contact us",
+    lede: "Schools, funders, volunteers, journalists — this form reaches a person, not a queue.",
+    metaTitle: "Contact Us",
     metaDescription:
-      "Bring debate to your school, partner with us, volunteer as a coach, or support a debater.",
+      "Bring debate to your school, partner with Debate Innovation, volunteer as a coach, or support a debater.",
   },
 } as const satisfies Record<string, PageIntro>;
 
-export const socialLinks = [
-  { label: "Instagram", href: "https://instagram.com", handle: "@debateinnovation" },
-  { label: "X", href: "https://x.com", handle: "@debateinnov" },
-  { label: "LinkedIn", href: "https://linkedin.com", handle: "Debate Innovation" },
-  { label: "YouTube", href: "https://youtube.com", handle: "Debate Innovation TV" },
-] as const;
-
 /* -------------------------------------------------------------------------- */
-/* Hero metrics                                                               */
+/* Home — hero and the three pillars                                          */
 /* -------------------------------------------------------------------------- */
 
-export interface Metric {
-  readonly value: number;
-  readonly suffix: string;
-  readonly label: string;
-}
+export const hero = {
+  script: "Debate Innovation",
+  title: "Empowering voices. Shaping leaders.",
+  highlight: "Shaping leaders.",
+  lede: "An exclusive platform for students in Africa, offering a space for constructive and meaningful dialogue on crucial issues that impact us all.",
+  note: "This 501(c)(3) non-profit initiative brings together the brightest minds to engage in thoughtful conversations about pressing subjects that are significant for the people of Africa.",
+} as const;
 
-export const metrics: readonly Metric[] = [
-  { value: 4200, suffix: "+", label: "Students trained" },
-  { value: 128, suffix: "", label: "Partner schools" },
-  { value: 16, suffix: "", label: "Regions reached" },
-  { value: 92, suffix: "%", label: "Progress to tertiary" },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Mission & vision                                                           */
-/* -------------------------------------------------------------------------- */
-
-export interface ValuePillar {
+export interface Pillar {
   readonly id: string;
   readonly title: string;
   readonly body: string;
   readonly icon: IconName;
-  readonly adinkra: AdinkraSymbol;
-  readonly meaning: string;
 }
 
-/** Simplified geometric marks inspired by Adinkra symbolism. */
-export type AdinkraSymbol = "nyansapo" | "adinkrahene" | "dwennimmen" | "sankofa" | "eban";
-
-/** Heading copy for this section now lives in `pageIntros.mission`. */
-export const mission = {
-  vision:
-    "A Ghana where every young person — in Accra, in Wa, in Keta — can walk into any room and make the case for the future they want.",
-  statement:
-    "We run year-round training in schools that rarely get it, we pay for the travel that keeps talent from being wasted, and we stay with our alumni long after the trophy.",
-} as const;
-
-export const valuePillars: readonly ValuePillar[] = [
+export const pillars: readonly Pillar[] = [
   {
-    id: "wisdom",
-    title: "Wisdom before volume",
-    body:
-      "We teach research first and rhetoric second. A student who cannot source a claim does not get to make it — on our stage or anywhere else.",
-    icon: "lightbulb",
-    adinkra: "nyansapo",
-    meaning: "Nyansapo — the wisdom knot",
+    id: "engage",
+    title: "Engage",
+    body: "Our goal is to encourage the exchange of intellectual ideas, promote critical thinking, and foster civil discourse, all while working towards the unity of the African continent.",
+    icon: "megaphone",
   },
   {
-    id: "leadership",
-    title: "Leadership you can practise",
-    body:
-      "Every chapter is student-run. Members schedule the sessions, chair the rounds, and carry the budget, because leadership is a skill, not a title.",
-    icon: "compass",
-    adinkra: "adinkrahene",
-    meaning: "Adinkrahene — charisma and leadership",
+    id: "learn",
+    title: "Learn",
+    body: "Students learn to research a claim, structure an argument, and hold a room — skills that carry far beyond the debate floor.",
+    icon: "bookOpen",
   },
   {
-    id: "resilience",
-    title: "Strength with humility",
-    body:
-      "Debaters lose. Often. We coach the round-after conversation as deliberately as the round itself, so a loss becomes evidence instead of an ending.",
-    icon: "shieldCheck",
-    adinkra: "dwennimmen",
-    meaning: "Dwennimmen — humility and strength",
-  },
-  {
-    id: "unity",
-    title: "One table, many tongues",
-    body:
-      "Rounds run in English, but we brief and debrief in Twi, Ewe, Ga, Dagbani and Hausa. No student is sidelined by the language of the ballot.",
-    icon: "handshake",
-    adinkra: "eban",
-    meaning: "Eban — safety and community",
+    id: "evolve",
+    title: "Evolve",
+    body: "The program covers a wide range of topics, including politics, social issues, economics, and more. It is open and accessible to all.",
+    icon: "trendingUp",
   },
 ];
 
+/** Real motions from recent Debate Innovation championships. */
+export const motions: readonly string[] = [
+  "How should Ghana respond to rising drug addiction among youth?",
+  "Should Ghana leave the Economic Community of West African States (ECOWAS)?",
+  "How should history remember Muammar Gaddafi: tyrant or visionary?",
+];
+
 /* -------------------------------------------------------------------------- */
-/* Programs                                                                   */
+/* Statistics                                                                 */
 /* -------------------------------------------------------------------------- */
 
-export type ProgramTrackId = "workshops" | "tournaments" | "leadership";
-
-export interface ProgramTrack {
-  readonly id: ProgramTrackId;
+export interface Stat {
+  readonly value: number;
+  readonly suffix: string;
   readonly label: string;
-  readonly headline: string;
-  readonly summary: string;
-  readonly items: readonly ProgramCard[];
+  /** Relative circle size, used to stagger the row the way the brand does. */
+  readonly scale: "sm" | "lg";
 }
 
-export interface ProgramCard {
+export const stats: readonly Stat[] = [
+  { value: 4, suffix: "", label: "Years Experience", scale: "sm" },
+  { value: 85, suffix: "%", label: "Retention Rate", scale: "lg" },
+  { value: 6, suffix: "k", label: "Overall Students", scale: "sm" },
+  { value: 6, suffix: "k", label: "Happy Students", scale: "lg" },
+];
+
+/* -------------------------------------------------------------------------- */
+/* People                                                                     */
+/* -------------------------------------------------------------------------- */
+
+export interface StaffMember {
+  readonly id: string;
+  readonly name: string;
+  readonly role: string;
+  /** Path under /public. Omit to render the initials monogram fallback. */
+  readonly image?: string;
+}
+
+export const staff: readonly StaffMember[] = [
+  {
+    id: "emmanuel-yeboah",
+    name: "Emmanuel Yeboah",
+    role: "Founder",
+    image: "/images/founder-emmanuel-yeboah.png",
+  },
+  { id: "edely-edmond", name: "Edely Edmond", role: "Co-Founder" },
+  { id: "princess-nneoma", name: "Princess Nneoma", role: "Secretary" },
+  { id: "clement-yeboah", name: "Clement Yeboah", role: "Student Ambassador, Ghana" },
+];
+
+/**
+ * Testimonials render only when this array has entries.
+ *
+ * Deliberately empty: the section is built and ready, but real quotes must come
+ * from real people who gave them. Add entries here and the section appears.
+ */
+export interface Testimonial {
+  readonly id: string;
+  readonly quote: string;
+  readonly name: string;
+  readonly role: string;
+  readonly rating: 1 | 2 | 3 | 4 | 5;
+}
+
+export const testimonials: readonly Testimonial[] = [];
+
+/* -------------------------------------------------------------------------- */
+/* Informational package                                                      */
+/* -------------------------------------------------------------------------- */
+
+export const informational = {
+  intro:
+    "Debate Innovation is an educational and leadership development organisation dedicated to empowering young people through the art of structured argument, public speaking, and civil discourse.",
+  vision:
+    "To become a leading debate and leadership organisation that nurtures intellectual growth, civic responsibility, and global awareness among young people.",
+  whatWeDo: [
+    "Debate training and public speaking workshops",
+    "School and community debate programs",
+    "Debate tournaments and competitions",
+    "Leadership and confidence development",
+    "Youth civic and policy engagement",
+  ],
+  whoWeServe: [
+    "Primary, Junior High, and Senior High School students",
+    "University students and debate clubs",
+    "Educational institutions and youth organisations",
+  ],
+  impact:
+    "Debate Innovation has trained and mentored hundreds of students, supported debate programs across schools, and created platforms where young voices are heard, respected, and empowered.",
+} as const;
+
+/* -------------------------------------------------------------------------- */
+/* Programs & tournaments                                                     */
+/* -------------------------------------------------------------------------- */
+
+export interface ProgramItem {
   readonly id: string;
   readonly title: string;
   readonly description: string;
   readonly icon: IconName;
   readonly meta: string;
   readonly location: string;
-  readonly tag: "Open" | "Selective" | "Invitational" | "Free";
+  readonly tag: "Open" | "Selective" | "Free" | "Invitational";
 }
 
-export const programTracks: readonly ProgramTrack[] = [
+export const programs: readonly ProgramItem[] = [
   {
-    id: "workshops",
-    label: "Workshops",
-    headline: "Weekly craft, taught in the classroom",
-    summary:
-      "Free, curriculum-aligned sessions delivered inside partner schools by trained facilitators and alumni coaches.",
-    items: [
-      {
-        id: "argument-lab",
-        title: "Argument Lab",
-        description:
-          "Eight weeks on claim, warrant, and impact. Students leave able to build and dismantle a case without raising their voice.",
-        icon: "scale",
-        meta: "8 weeks · Weekly",
-        location: "24 schools · Greater Accra & Ashanti",
-        tag: "Free",
-      },
-      {
-        id: "research-clinic",
-        title: "Evidence & Research Clinic",
-        description:
-          "Source evaluation, citation discipline, and how to read a policy brief — taught with Ghanaian case material, not imported examples.",
-        icon: "bookOpen",
-        meta: "6 weeks · Saturdays",
-        location: "Hybrid · Accra hub + online",
-        tag: "Open",
-      },
-      {
-        id: "voice-stage",
-        title: "Voice & Stagecraft",
-        description:
-          "Breath, pace, and presence for students who have the argument but not yet the room. Runs with drama teachers from partner schools.",
-        icon: "mic",
-        meta: "4 weeks · Twice weekly",
-        location: "Regional centres",
-        tag: "Open",
-      },
-    ],
+    id: "national-championship",
+    title: "National Championship",
+    description:
+      "Our flagship competition. Schools from every region meet across three days of rounds, closing with a final argued in front of students, families, and press.",
+    icon: "trophy",
+    meta: "Annual · 3 days",
+    location: "Accra",
+    tag: "Selective",
   },
   {
-    id: "tournaments",
-    label: "Tournaments",
-    headline: "Competition that travels to the student",
-    summary:
-      "We cover transport, meals, and lodging so a debater's postcode never decides whether they compete.",
-    items: [
-      {
-        id: "national-championship",
-        title: "National Schools Championship",
-        description:
-          "Ghana's largest secondary-school debate championship. Sixty-four teams, British Parliamentary format, streamed finals.",
-        icon: "trophy",
-        meta: "March · 3 days",
-        location: "Accra International Conference Centre",
-        tag: "Selective",
-      },
-      {
-        id: "regional-circuit",
-        title: "Regional Open Circuit",
-        description:
-          "Six qualifying legs across the north, middle belt, and coast. Entry is free and every team gets written adjudicator feedback.",
-        icon: "globe",
-        meta: "Sep – Feb · 6 legs",
-        location: "Tamale, Kumasi, Takoradi, Ho, Wa, Cape Coast",
-        tag: "Free",
-      },
-      {
-        id: "pan-african-invitational",
-        title: "Pan-African Invitational",
-        description:
-          "Our national squad meets teams from Nigeria, Kenya, Rwanda, and South Africa. Full delegation costs are covered by the fund.",
-        icon: "award",
-        meta: "July · 5 days",
-        location: "Rotating host city",
-        tag: "Invitational",
-      },
-    ],
+    id: "inter-basic-schools",
+    title: "Inter-Basic Schools Debate",
+    description:
+      "Competitive debate for primary and junior high students, hosted in partnership with schools and community organisations.",
+    icon: "users",
+    meta: "Termly",
+    location: "Host schools nationwide",
+    tag: "Open",
   },
   {
-    id: "leadership",
-    label: "Leadership",
-    headline: "What happens after the trophy",
-    summary:
-      "Long-horizon tracks that turn competitive debaters into facilitators, advocates, and mentors for the cohort behind them.",
-    items: [
-      {
-        id: "fellows",
-        title: "Innovation Fellows",
-        description:
-          "A twelve-month fellowship pairing alumni with mentors in law, journalism, policy, and enterprise. Includes a funded community project.",
-        icon: "sparkles",
-        meta: "12 months · Cohort of 20",
-        location: "Nationwide · Monthly residencies",
-        tag: "Selective",
-      },
-      {
-        id: "coach-academy",
-        title: "Coach Academy",
-        description:
-          "Certifies teachers and alumni to run their own chapters. Graduates receive the full curriculum and a starter kit for their school.",
-        icon: "graduationCap",
-        meta: "10 weeks · Two intakes a year",
-        location: "Online + Accra intensive",
-        tag: "Open",
-      },
-      {
-        id: "civic-lab",
-        title: "Civic Advocacy Lab",
-        description:
-          "Students take one local issue from research to a presentation before their district assembly. Real stakes, real audience.",
-        icon: "megaphone",
-        meta: "1 term",
-        location: "12 districts",
-        tag: "Selective",
-      },
-    ],
+    id: "regional-rounds",
+    title: "Regional Qualifying Rounds",
+    description:
+      "Qualifying legs that bring the championship to students rather than asking them to travel to it. Entry is free and every team receives written feedback.",
+    icon: "globe",
+    meta: "Season-long",
+    location: "Regions across Ghana",
+    tag: "Free",
+  },
+  {
+    id: "public-speaking",
+    title: "Public Speaking Workshops",
+    description:
+      "Breath, pace, structure, and presence. Delivered inside partner schools by trained facilitators alongside classroom teachers.",
+    icon: "mic",
+    meta: "Weekly sessions",
+    location: "Partner schools",
+    tag: "Free",
+  },
+  {
+    id: "research-clinic",
+    title: "Research & Evidence Clinic",
+    description:
+      "Source evaluation, citation discipline, and how to read a policy brief — taught with Ghanaian case material rather than imported examples.",
+    icon: "bookOpen",
+    meta: "6 weeks",
+    location: "Hybrid · in person and online",
+    tag: "Open",
+  },
+  {
+    id: "leadership-track",
+    title: "Leadership & Confidence Track",
+    description:
+      "For alumni ready to run their own chapters. Graduates receive the full curriculum and support to start a club at their school.",
+    icon: "graduationCap",
+    meta: "Two intakes a year",
+    location: "Nationwide",
+    tag: "Selective",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* Media gallery                                                              */
+/* Gallery                                                                    */
 /* -------------------------------------------------------------------------- */
 
-export type GalleryCategory = "Tournaments" | "Workshops" | "Community" | "Alumni";
+export type GalleryCategory = "Championships" | "Workshops" | "Awards" | "Community";
 
 export interface GalleryItem {
   readonly id: string;
@@ -357,176 +368,301 @@ export interface GalleryItem {
   readonly caption: string;
   readonly category: GalleryCategory;
   readonly year: string;
-  /** Gradient stops used by the placeholder visual. Swap for real imagery. */
-  readonly tone: "gold" | "crimson" | "forest" | "bronze";
+  /** Path under /public. Omit to render the branded gradient placeholder. */
+  readonly image?: string;
+  readonly tone: "cyan" | "teal" | "gold" | "green";
   readonly span?: "wide" | "tall";
 }
 
 export const galleryCategories: readonly GalleryCategory[] = [
-  "Tournaments",
+  "Championships",
   "Workshops",
+  "Awards",
   "Community",
-  "Alumni",
 ];
 
 export const galleryItems: readonly GalleryItem[] = [
   {
     id: "g1",
-    title: "Grand final, Accra",
-    caption: "Wesley Girls' closes on the motion — mandatory civics for senior high.",
-    category: "Tournaments",
+    title: "Debate in session",
+    caption:
+      "A full house at a Debate Innovation tournament — the panel on the floor, the rest of the school watching.",
+    category: "Championships",
     year: "2025",
-    tone: "gold",
+    image: "/images/debate-panel-audience.png",
+    tone: "cyan",
     span: "wide",
   },
   {
     id: "g2",
-    title: "Argument Lab, Tamale",
-    caption: "Week three: warrant-building with first-year debaters.",
-    category: "Workshops",
+    title: "The champion receives her trophy",
+    caption: "Presented in front of the Ghana flag at the close of the tournament.",
+    category: "Awards",
     year: "2025",
-    tone: "forest",
+    image: "/images/trophy-presentation-ghana-flag.png",
+    tone: "teal",
   },
   {
     id: "g3",
-    title: "Coach Academy intake",
-    caption: "Thirty-one teachers certified to run chapters of their own.",
-    category: "Community",
-    year: "2024",
-    tone: "bronze",
+    title: "Every finalist takes home a certificate",
+    caption: "Nine debaters with their certificates, medals, and the tournament trophy.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/certificate-winners-lineup.png",
+    tone: "gold",
   },
   {
     id: "g4",
-    title: "Northern circuit leg",
-    caption: "Wa hosts its first qualifying leg — fourteen schools, one hall.",
-    category: "Tournaments",
-    year: "2024",
-    tone: "crimson",
+    title: "The winning school",
+    caption: "The team and their supporters with the championship trophy and school colours.",
+    category: "Championships",
+    year: "2025",
+    image: "/images/team-green-uniforms-trophy.png",
+    tone: "green",
     span: "tall",
   },
   {
     id: "g5",
-    title: "Fellows residency",
-    caption: "Cohort four presents community projects to their mentor panel.",
-    category: "Alumni",
+    title: "Prize giving",
+    caption: "Winners with certificates, medals, trophies, and their prize bags.",
+    category: "Awards",
     year: "2025",
-    tone: "gold",
+    image: "/images/award-winners-certificates.png",
+    tone: "cyan",
   },
   {
     id: "g6",
-    title: "District assembly, Ho",
-    caption: "Civic Lab students argue for a drainage budget line — and win it.",
+    title: "Celebrating with the coaches",
+    caption: "The moment the result is announced — students and coaches together.",
     category: "Community",
     year: "2025",
-    tone: "forest",
+    image: "/images/celebration-with-coaches.png",
+    tone: "teal",
   },
   {
     id: "g7",
-    title: "Stagecraft intensive",
-    caption: "Breath and pace work before the Kumasi regional.",
-    category: "Workshops",
-    year: "2024",
-    tone: "bronze",
+    title: "Presenting the trophy",
+    caption: "An organiser hands over the championship trophy to the winning debater.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/trophy-handover.png",
+    tone: "gold",
   },
   {
     id: "g8",
-    title: "Pan-African delegation",
-    caption: "Ghana's squad departs for the invitational — fully funded.",
-    category: "Alumni",
+    title: "Making the case",
+    caption: "Students seated as a panel while the floor listens.",
+    category: "Championships",
     year: "2025",
-    tone: "crimson",
+    image: "/images/debate-session-in-progress.png",
+    tone: "green",
+  },
+  {
+    id: "g9",
+    title: "Certificate of participation",
+    caption: "A finalist receives her certificate and the trophy from the adjudication panel.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/certificate-presentation-smock.png",
+    tone: "cyan",
+  },
+  {
+    id: "g10",
+    title: "A word with the winner",
+    caption: "Close of the ceremony at the Inter-Basic Schools Debate.",
+    category: "Community",
+    year: "2025",
+    image: "/images/certificate-presentation-closeup.png",
+    tone: "teal",
+  },
+  {
+    id: "g11",
+    title: "Our youngest finalist",
+    caption: "Primary-school debaters compete on the same stage as the senior teams.",
+    category: "Workshops",
+    year: "2025",
+    image: "/images/certificate-presentation-junior.png",
+    tone: "gold",
+  },
+  {
+    id: "g12",
+    title: "Trophy raised",
+    caption: "The winning team lifts the cup at the end of the day.",
+    category: "Championships",
+    year: "2025",
+    image: "/images/team-trophy-raised.png",
+    tone: "green",
+  },
+  {
+    id: "g13",
+    title: "Senior high finalists",
+    caption: "Twelve finalists line up with their certificates at the close of the tournament.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/shs-finalists-certificates.png",
+    tone: "cyan",
+  },
+  {
+    id: "g14",
+    title: "First and second prize",
+    caption: "Winners with the trophy and their prize cheques — GH₵1,500 and GH₵1,000.",
+    category: "Awards",
+    year: "2024",
+    image: "/images/prize-winners-cheques.png",
+    tone: "gold",
+    span: "wide",
+  },
+  {
+    id: "g15",
+    title: "Congratulated by her head teacher",
+    caption: "A medal winner applauded as she returns to her seat.",
+    category: "Community",
+    year: "2025",
+    image: "/images/medal-winner-applauded.png",
+    tone: "teal",
+  },
+  {
+    id: "g16",
+    title: "Schools recognised",
+    caption: "A participating school receives its certificate from the organisers.",
+    category: "Community",
+    year: "2025",
+    image: "/images/certificate-handshake.png",
+    tone: "green",
+  },
+  {
+    id: "g17",
+    title: "Second prize winner",
+    caption: "Certificate and cheque presented at the regional round.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/second-prize-winner.png",
+    tone: "cyan",
+  },
+  {
+    id: "g18",
+    title: "Every participant goes home with something",
+    caption: "Medals and gift bags for the full cohort at the basic-schools round.",
+    category: "Community",
+    year: "2025",
+    image: "/images/winners-with-gift-bags.png",
+    tone: "teal",
+  },
+  {
+    id: "g19",
+    title: "Making the argument",
+    caption: "A speaker holds the floor while the opposing bench listens.",
+    category: "Championships",
+    year: "2025",
+    image: "/images/student-speaking-mic.png",
+    tone: "gold",
+  },
+  {
+    id: "g20",
+    title: "Medal presentation",
+    caption: "A winner receives his medal from the head of school.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/medal-presentation.png",
+    tone: "green",
+  },
+  {
+    id: "g21",
+    title: "Certificate of participation",
+    caption: "Presented to every student who argued a round.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/certificate-ceremony-1.png",
+    tone: "cyan",
+  },
+  {
+    id: "g22",
+    title: "Handshake and certificate",
+    caption: "The close of the ceremony at the senior high round.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/certificate-ceremony-5.png",
+    tone: "teal",
+  },
+  {
+    id: "g23",
+    title: "Prizes handed out",
+    caption: "Students distributing gifts to their peers after the final round.",
+    category: "Community",
+    year: "2025",
+    image: "/images/prize-handover-classroom.png",
+    tone: "gold",
+  },
+  {
+    id: "g24",
+    title: "The Debate Innovation team",
+    caption: "Coaches, adjudicators, and organisers at a national tournament.",
+    category: "Community",
+    year: "2025",
+    image: "/images/team-group.png",
+    tone: "green",
+    span: "wide",
+  },
+  {
+    id: "g25",
+    title: "Ready for the ceremony",
+    caption: "Trophies, medals, and framed certificates laid out before the presentation.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/awards-table-trophies.png",
+    tone: "gold",
+    span: "tall",
+  },
+  {
+    id: "g26",
+    title: "Medal and gift presented",
+    caption: "A finalist receives his medal, certificate, and prize bag.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/medal-and-gift-presentation.png",
+    tone: "cyan",
+  },
+  {
+    id: "g27",
+    title: "Listening to the opposition",
+    caption: "The bench follows an opposing speaker during a round.",
+    category: "Championships",
+    year: "2025",
+    image: "/images/debate-bench-listening.png",
+    tone: "teal",
+  },
+  {
+    id: "g28",
+    title: "Certificate presented",
+    caption: "One of many handed out across the day's rounds.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/certificate-ceremony-2.png",
+    tone: "green",
+  },
+  {
+    id: "g29",
+    title: "Recognised for taking part",
+    caption: "Participation certificates for every student who argued.",
+    category: "Awards",
+    year: "2025",
+    image: "/images/certificate-ceremony-3.png",
+    tone: "gold",
+  },
+  {
+    id: "g30",
+    title: "A word of encouragement",
+    caption: "The head of school congratulates a finalist.",
+    category: "Community",
+    year: "2025",
+    image: "/images/certificate-ceremony-4.png",
+    tone: "cyan",
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* News                                                                       */
+/* Contact                                                                    */
 /* -------------------------------------------------------------------------- */
-
-export interface Article {
-  readonly id: string;
-  readonly slug: string;
-  readonly title: string;
-  readonly excerpt: string;
-  readonly date: string;
-  readonly isoDate: string;
-  readonly readTime: string;
-  readonly category: string;
-  /** Placeholder body copy. Replace with real articles, or a CMS field. */
-  readonly body: readonly string[];
-}
-
-export const articles: readonly Article[] = [
-  {
-    id: "a1",
-    slug: "2026-season-open",
-    title: "Sixteen regions, one circuit: the 2026 season is open",
-    excerpt:
-      "Registration for the Regional Open Circuit closes 30 September. Entry remains free, and travel bursaries now cover every qualifying leg.",
-    date: "12 July 2026",
-    isoDate: "2026-07-12",
-    readTime: "4 min read",
-    category: "Announcement",
-    body: [
-      "Registration for the 2026 Regional Open Circuit is now open to every senior high school in Ghana, and closes on 30 September. As in every previous season, entry costs nothing.",
-      "The change this year is travel. Bursaries now cover transport, meals, and lodging for all six qualifying legs rather than the national finals alone. Last season we watched four qualified teams withdraw between the regional and the national round, every one of them for the cost of a bus. That should not decide who competes.",
-      "Schools without an existing chapter can still enter. Register your interest and a regional coordinator will arrange a facilitator visit before the first leg.",
-    ],
-  },
-  {
-    id: "a2",
-    slug: "chapter-cost-breakdown",
-    title: "What a debate chapter actually costs a school",
-    excerpt:
-      "We published our full per-school budget — coaching, printing, transport, everything. Here is where each cedi goes and why we publish it.",
-    date: "28 June 2026",
-    isoDate: "2026-06-28",
-    readTime: "7 min read",
-    category: "Transparency",
-    body: [
-      "We are asked the same question by nearly every prospective funder: what does one school chapter actually cost to run for a year? So we published the whole budget, line by line.",
-      "The headline figure is GH₵2,500. Roughly half is facilitation — a trained coach in the room every week for three terms. The rest splits between printed case files, inter-school transport, and the regional coordinator time that keeps a chapter from quietly folding in its second year.",
-      "We publish this for two reasons. A school considering a chapter deserves to know what it is committing to. And a funder deserves to see the arithmetic rather than a rounded number in a brochure.",
-    ],
-  },
-  {
-    id: "a3",
-    slug: "alumni-report-2021",
-    title: "Alumni report: where the class of 2021 landed",
-    excerpt:
-      "Five years on, we tracked 214 alumni through tertiary admission, employment, and civic participation. The findings, in full.",
-    date: "05 June 2026",
-    isoDate: "2026-06-05",
-    readTime: "9 min read",
-    category: "Impact",
-    body: [
-      "Between January and April we traced 214 of the 231 students who completed a Debate Innovation program in 2021. This is what we found, including the parts that did not flatter us.",
-      "Tertiary progression is the clearest result: 92 per cent entered a university, polytechnic, or training college, against a national average considerably below that. Alumni were also markedly more likely to hold a leadership role in their institution.",
-      "The weakest finding concerns retention outside the two largest regions. Chapters in the north lost members at nearly twice the rate of those in Greater Accra, and our coordinator coverage there was thinner than we had claimed internally. Fixing that is the first commitment of the 2026 season.",
-    ],
-  },
-];
-
-/** Canonical URL for an article. */
-export function articleHref(article: Article): string {
-  return `/news/${article.slug}`;
-}
-
-/* -------------------------------------------------------------------------- */
-/* Support                                                                    */
-/* -------------------------------------------------------------------------- */
-
-export interface DonationTier {
-  readonly amount: number;
-  readonly impact: string;
-}
-
-/** Amounts are in Ghana cedis (GHS). */
-export const donationTiers: readonly DonationTier[] = [
-  { amount: 100, impact: "Printed case files for one student, one full season" },
-  { amount: 350, impact: "Return transport for a rural team to a qualifying leg" },
-  { amount: 900, impact: "One Argument Lab term for a class of thirty" },
-  { amount: 2500, impact: "Sponsors an entire school chapter for a year" },
-];
 
 export const contactTopics = [
   "Partner with us",
@@ -538,3 +674,16 @@ export const contactTopics = [
 ] as const;
 
 export type ContactTopic = (typeof contactTopics)[number];
+
+/** Amounts are in US dollars — the organisation is a US-registered 501(c)(3). */
+export interface DonationTier {
+  readonly amount: number;
+  readonly impact: string;
+}
+
+export const donationTiers: readonly DonationTier[] = [
+  { amount: 25, impact: "Printed case files for one student, one full season" },
+  { amount: 60, impact: "Transport for a rural team to a qualifying round" },
+  { amount: 150, impact: "One workshop term for a class of thirty" },
+  { amount: 400, impact: "Sponsors an entire school chapter for a year" },
+];
