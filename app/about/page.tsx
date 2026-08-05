@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { PageHero } from "@/components/layout/PageHero";
 import { AboutIntro } from "@/components/sections/AboutIntro";
+import { Founder } from "@/components/sections/Founder";
 import { StaffCarousel } from "@/components/sections/StaffCarousel";
 import { StatsBand } from "@/components/sections/StatsBand";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -22,6 +23,7 @@ export default function AboutPage() {
       <PageHero intro={intro} />
       <AboutIntro withLink={false} headingId="about-page-heading" />
       <StatsBand />
+      <Founder />
       <StaffCarousel />
       <Testimonials />
     </>

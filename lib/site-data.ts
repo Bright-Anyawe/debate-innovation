@@ -233,10 +233,39 @@ export const staff: readonly StaffMember[] = [
     role: "Founder",
     image: "/images/founder-emmanuel-yeboah.png",
   },
-  { id: "edely-edmond", name: "Edely Edmond", role: "Co-Founder" },
+  { id: "edely-edmond", name: "Edely Edmond", role: "Co-Founder", image: "/images/Edmond.png" },
   { id: "princess-nneoma", name: "Princess Nneoma", role: "Secretary" },
-  { id: "clement-yeboah", name: "Clement Yeboah", role: "Student Ambassador, Ghana" },
+  { id: "clement-yeboah", name: "Clement Yeboah", role: "Student Ambassador, Ghana", image: "/images/Clement.png" },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* Founder                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export interface FounderBio {
+  readonly name: string;
+  readonly role: string;
+  readonly image?: string;
+  readonly paragraphs: readonly string[];
+  readonly quote: string;
+}
+
+export const founder: FounderBio = {
+  name: "Emmanuel Yeboah",
+  role: "Founder & Executive Director",
+  image: "/images/founder-emmanuel-yeboah.png",
+  paragraphs: [
+    "Emmanuel Yeboah is the Founder and Executive Director of Debate Innovation, a nonprofit organization dedicated to empowering young people through debate, public speaking, critical thinking, and leadership development. Since founding the organization in 2023, he has worked to expand access to high-quality debate education for students, helping them develop the confidence and skills needed to become thoughtful leaders and engaged citizens.",
+    "Originally from Ghana, Emmanuel understands the transformative impact that education and communication skills can have on a young person's future. His vision for Debate Innovation is rooted in the belief that every student—regardless of background—should have the opportunity to develop their voice, think critically, and participate in meaningful civic dialogue.",
+    "Emmanuel earned a Bachelor of Arts in Political Science with a minor in Legal Studies from the University of South Florida. He is currently pursuing a Juris Doctor degree, where he continues to build on his passion for advocacy, leadership, and public service.",
+    "His journey in debate began in high school, where he quickly discovered the power of structured argumentation and effective communication. After serving as President of his school's Debate Society for four consecutive years, he dedicated himself to mentoring younger students, organizing competitions, and expanding opportunities for aspiring debaters. He later founded the Debate Innovation Club at the University of South Florida, further advancing his mission of making debate education accessible to more students.",
+    "In addition to his work in education and advocacy, Emmanuel is the self-published author of The First Lecture, a book that encourages readers to embrace personal growth, resilience, and purpose. His writing reflects the same commitment to education, leadership, and lifelong learning that guides the mission of Debate Innovation.",
+    "Under Emmanuel's leadership, Debate Innovation has organized debate tournaments, leadership workshops, and educational programs that encourage students to analyze complex issues, communicate respectfully, and develop evidence-based arguments. The organization continues to partner with schools, educators, and community leaders to cultivate the next generation of ethical leaders and informed citizens.",
+    "Emmanuel's commitment to academic excellence and community leadership has been recognized through honors including the University of South Florida Black Faculty & Staff Association Endowed Scholarship. His long-term vision is to establish Debate Innovation as one of Africa's leading youth development organizations, equipping thousands of students with the confidence, knowledge, and leadership skills to create lasting change in their communities.",
+  ],
+  quote:
+    "At Debate Innovation, young people come together to Engage in meaningful discussions, Learn from one another, and Evolve through the knowledge, perspectives, and experiences they share. We believe that every conversation has the power to inspire confident thinkers, compassionate leaders, and innovative changemakers who will shape a better future.",
+};
 
 /**
  * Testimonials render only when this array has entries.

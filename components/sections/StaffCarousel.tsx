@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -18,15 +18,27 @@ import { staff, type StaffMember } from "@/lib/site-data";
  */
 export function StaffCarousel() {
   const railRef = useRef<HTMLUListElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const scrollBy = useCallback((direction: 1 | -1) => {
+  const scrollToIndex = useCallback((index: number) => {
     const rail = railRef.current;
     if (!rail) return;
 
     const card = rail.querySelector("li");
-    const amount = card ? card.getBoundingClientRect().width + 20 : rail.clientWidth * 0.8;
-    rail.scrollBy({ left: amount * direction, behavior: "smooth" });
+    if (!card) return;
+
+    const next = (index + staff.length) % staff.length;
+    rail.scrollTo({ left: card.getBoundingClientRect().width * next + 20 * next, behavior: "smooth" });
+    setActiveIndex(next);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      scrollToIndex(activeIndex + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [activeIndex, scrollToIndex]);
 
   return (
     <section aria-labelledby="staff-heading" className="relative isolate overflow-hidden py-section">
@@ -42,10 +54,10 @@ export function StaffCarousel() {
           />
 
           <div className="flex shrink-0 gap-2">
-            <CarouselButton label="Previous team members" onClick={() => scrollBy(-1)}>
+            <CarouselButton label="Previous team members" onClick={() => scrollToIndex(activeIndex - 1)}>
               <ChevronLeft className="size-5" aria-hidden="true" />
             </CarouselButton>
-            <CarouselButton label="Next team members" onClick={() => scrollBy(1)}>
+            <CarouselButton label="Next team members" onClick={() => scrollToIndex(activeIndex + 1)}>
               <ChevronRight className="size-5" aria-hidden="true" />
             </CarouselButton>
           </div>
