@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { fieldError } from "@/lib/motion";
+import { payments } from "@/lib/payment";
 import { donationTiers } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
@@ -24,10 +25,10 @@ const currency = new Intl.NumberFormat("en-US", {
 /**
  * Donation dialog.
  *
- * Collects intent only — amount and frequency — and hands off to a hosted,
- * PCI-compliant payment page. No card or mobile-money credentials are ever
- * entered into this application. Wire `handoffToCheckout` to your provider
- * (Stripe, Donorbox, and Givebutter all suit a US-registered 501(c)(3)).
+ * Collects intent only — amount and frequency — and hands off to Paybee's
+ * hosted, PCI-compliant donation page. No card or mobile-money credentials are
+ * ever entered into this application. Point `payments.donationUrl` at your
+ * Paybee donation campaign link to start receiving donations.
  */
 export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [frequency, setFrequency] = useState<Frequency>("once");
@@ -74,10 +75,15 @@ export function DonationModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
     setError(null);
 
-    // INTEGRATION POINT — replace with your payment provider's redirect:
-    //   const res = await fetch("/api/donate", { method: "POST", body: JSON.stringify({ amount, frequency }) });
-    //   window.location.href = (await res.json()).authorizationUrl;
-    console.info("Donation intent captured", { amount, frequency });
+    if (!payments.donationUrl) {
+      setError("Donations are not set up yet — please try again a little later.");
+      return;
+    }
+
+    // Hand off to Paybee's hosted, PCI-compliant donation page. The amount and
+    // frequency are chosen again on Paybee's side so the intent carries over
+    // best when we send the donor to a preset "Donation Option" campaign link.
+    window.location.href = payments.donationUrl;
   }
 
   return (

@@ -14,19 +14,21 @@ import { founder } from "@/lib/site-data";
  * A portrait beside the full biography, closing with a pull-quote. Content lives
  * in `founder` in site-data so it can be edited without touching markup.
  */
-export function Founder() {
+export function Founder({ showHeading = true }: { showHeading?: boolean }) {
   return (
-    <section aria-labelledby="founder-heading" className="relative isolate overflow-hidden py-section">
+    <section className="relative isolate overflow-hidden py-section">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-surface-soft" />
 
       <div className="container-page">
-        <SectionHeading
-          id="founder-heading"
-          script="Meet The Visionary"
-          title="About the Founder"
-          highlight="Founder"
-          align="center"
-        />
+        {showHeading ? (
+          <SectionHeading
+            id="founder-heading"
+            script="Meet The Visionary"
+            title="About the Founder"
+            highlight="Founder"
+            align="center"
+          />
+        ) : null}
 
         <div className="mt-14 grid items-start gap-14 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-16">
           <Reveal variants={slideInLeft} className="lg:sticky lg:top-24">

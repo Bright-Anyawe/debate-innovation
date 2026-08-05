@@ -2,9 +2,9 @@ import { AboutIntro } from "@/components/sections/AboutIntro";
 import { GalleryPreview } from "@/components/sections/GalleryPreview";
 import { HeroSlider } from "@/components/sections/HeroSlider";
 import { LogoMarquee } from "@/components/sections/LogoMarquee";
-import { MotionsBand } from "@/components/sections/MotionsBand";
 import { NewsGrid } from "@/components/sections/NewsGrid";
 import { StaffCarousel } from "@/components/sections/StaffCarousel";
+import { StatsBand } from "@/components/sections/StatsBand";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { VideoFeature } from "@/components/sections/VideoFeature";
 import { videoClips } from "@/lib/video-data";
@@ -19,7 +19,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSlider />
-      <MotionsBand />
+      <StatsBand />
       <AboutIntro />
       <VideoFeature clips={videoClips} />
       <GalleryPreview />

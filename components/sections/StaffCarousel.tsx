@@ -1,104 +1,59 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import Link from "next/link";
 import { staff, type StaffMember } from "@/lib/site-data";
 
 /**
  * The people behind the organisation.
  *
- * A native scroll-snap rail rather than a JS carousel: it is keyboard and
- * touch accessible for free, never traps focus on an off-screen card, and
- * degrades to a plain scrollable list if scripting fails. The arrows just
- * nudge `scrollLeft`.
+ * An infinite marquee: the track renders the board twice and translates by
+ * exactly -50%, so it circles seamlessly with no JS. The duplicate copy is
+ * `aria-hidden` so screen readers hear the board once. It pauses on hover.
  */
 export function StaffCarousel() {
-  const railRef = useRef<HTMLUListElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const scrollToIndex = useCallback((index: number) => {
-    const rail = railRef.current;
-    if (!rail) return;
-
-    const card = rail.querySelector("li");
-    if (!card) return;
-
-    const next = (index + staff.length) % staff.length;
-    rail.scrollTo({ left: card.getBoundingClientRect().width * next + 20 * next, behavior: "smooth" });
-    setActiveIndex(next);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      scrollToIndex(activeIndex + 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [activeIndex, scrollToIndex]);
-
   return (
     <section aria-labelledby="staff-heading" className="relative isolate overflow-hidden py-section">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-surface-tint" />
 
       <div className="container-page">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <SectionHeading
-            id="staff-heading"
-            script="Come Through with Guide"
-            title="Meet our team"
-            highlight="team"
-          />
+        <SectionHeading
+          id="staff-heading"
+          script="With Great Thanks"
+          title="Board of Directors"
+          highlight="Directors"
+        />
+      </div>
 
-          <div className="flex shrink-0 gap-2">
-            <CarouselButton label="Previous team members" onClick={() => scrollToIndex(activeIndex - 1)}>
-              <ChevronLeft className="size-5" aria-hidden="true" />
-            </CarouselButton>
-            <CarouselButton label="Next team members" onClick={() => scrollToIndex(activeIndex + 1)}>
-              <ChevronRight className="size-5" aria-hidden="true" />
-            </CarouselButton>
-          </div>
-        </div>
+      <div className="group relative mt-12">
+        {/* Edge fades so cards enter and leave rather than being cut off. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-surface-tint to-transparent sm:w-24"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-surface-tint to-transparent sm:w-24"
+        />
 
-        <ul
-          ref={railRef}
-          className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {staff.map((member) => (
-            <li
-              key={member.id}
-              className="w-[15rem] shrink-0 snap-start sm:w-[16.5rem]"
+        <div className="animate-marquee flex w-max gap-5">
+          {[0, 1].map((copy) => (
+            <ul
+              key={copy}
+              aria-hidden={copy === 1}
+              className="flex shrink-0 items-stretch gap-5 pr-5"
             >
-              <StaffCard member={member} />
-            </li>
+              {staff.map((member) => (
+                <li key={`${copy}-${member.id}`} className="w-[15rem] shrink-0 sm:w-[16.5rem]">
+                  <StaffCard member={member} />
+                </li>
+              ))}
+            </ul>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
-  );
-}
-
-function CarouselButton({
-  label,
-  onClick,
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="grid size-11 place-items-center rounded-full border border-ink-200 bg-white text-deep-700 transition-colors hover:border-brand-400 hover:bg-brand-600 hover:text-white"
-    >
-      {children}
-    </button>
   );
 }
 
@@ -109,12 +64,8 @@ function StaffCard({ member }: { member: StaffMember }) {
     .slice(0, 2)
     .join("");
 
-  return (
-    <motion.article
-      whileHover={{ y: -8 }}
-      transition={{ type: "spring", stiffness: 300, damping: 24 }}
-      className="group h-full"
-    >
+  const card = (
+    <>
       <div className="relative mx-auto size-36 overflow-hidden rounded-full border-4 border-white shadow-card">
         {member.image ? (
           <Photo src={member.image} alt={member.name} sizes="144px" />
@@ -141,6 +92,20 @@ function StaffCard({ member }: { member: StaffMember }) {
           {member.role}
         </p>
       </div>
-    </motion.article>
+    </>
   );
+
+  if (member.href) {
+    return (
+      <Link
+        href={member.href}
+        aria-label={`${member.name}, ${member.role} — view profile`}
+        className="group block h-full"
+      >
+        {card}
+      </Link>
+    );
+  }
+
+  return <article className="group h-full">{card}</article>;
 }

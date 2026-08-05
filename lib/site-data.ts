@@ -47,13 +47,25 @@ export interface NavLink {
 
 export const navLinks: readonly NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
-  { label: "Informational Package", href: "/informational-package" },
-  { label: "Tournament Info", href: "/tournaments" },
   {
-    label: "Pages",
+    label: "About",
+    href: "/about",
+    children: [
+      { label: "About Us", href: "/about" },
+      { label: "Meet the Founder", href: "/about/founder" },
+    ],
+  },
+  {
+    label: "Programs",
+    href: "/tournaments",
+    children: [
+      { label: "Tournament Info", href: "/tournaments" },
+      { label: "Informational Package", href: "/informational-package" },
+    ],
+  },
+  {
+    label: "Media",
     href: "/gallery",
-    activeFor: ["/news"],
     children: [
       { label: "Gallery", href: "/gallery" },
       { label: "News & Articles", href: "/news" },
@@ -106,6 +118,14 @@ export const pageIntros = {
     metaTitle: "About Us",
     metaDescription:
       "Debate Innovation is a 501(c)(3) non-profit bringing together the brightest young minds across Africa for thoughtful, structured debate.",
+  },
+  founder: {
+    script: "Meet The Visionary",
+    title: "About Emmanuel Yeboah",
+    lede: "The founder and executive director behind Debate Innovation — his story, his vision, and the values that drive the organisation.",
+    metaTitle: "About the Founder",
+    metaDescription:
+      "Meet Emmanuel Yeboah, founder and executive director of Debate Innovation — the nonprofit empowering young people across Africa through debate and leadership.",
   },
   informational: {
     script: "Empowering Voices",
@@ -188,13 +208,6 @@ export const pillars: readonly Pillar[] = [
   },
 ];
 
-/** Real motions from recent Debate Innovation championships. */
-export const motions: readonly string[] = [
-  "How should Ghana respond to rising drug addiction among youth?",
-  "Should Ghana leave the Economic Community of West African States (ECOWAS)?",
-  "How should history remember Muammar Gaddafi: tyrant or visionary?",
-];
-
 /* -------------------------------------------------------------------------- */
 /* Statistics                                                                 */
 /* -------------------------------------------------------------------------- */
@@ -224,6 +237,8 @@ export interface StaffMember {
   readonly role: string;
   /** Path under /public. Omit to render the initials monogram fallback. */
   readonly image?: string;
+  /** Optional internal page for this member (e.g. the founder's profile). */
+  readonly href?: string;
 }
 
 export const staff: readonly StaffMember[] = [
@@ -231,11 +246,14 @@ export const staff: readonly StaffMember[] = [
     id: "emmanuel-yeboah",
     name: "Emmanuel Yeboah",
     role: "Founder",
-    image: "/images/founder-emmanuel-yeboah.png",
+    image: "/images/Founder(Officail).png",
+    href: "/about/founder",
   },
   { id: "edely-edmond", name: "Edely Edmond", role: "Co-Founder", image: "/images/Edmond.png" },
   { id: "princess-nneoma", name: "Princess Nneoma", role: "Secretary" },
   { id: "clement-yeboah", name: "Clement Yeboah", role: "Student Ambassador, Ghana", image: "/images/Clement.png" },
+  { id: "davidson-nzekwe-daniel", name: "Davidson Nzekwe-Daniel", role: "Founder of Davidson Initiative" },
+  { id: "angela-el-fayez", name: "Angela El-Fayez", role: "Professor" },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -253,7 +271,7 @@ export interface FounderBio {
 export const founder: FounderBio = {
   name: "Emmanuel Yeboah",
   role: "Founder & Executive Director",
-  image: "/images/founder-emmanuel-yeboah.png",
+  image: "/images/Founder(Officail).png",
   paragraphs: [
     "Emmanuel Yeboah is the Founder and Executive Director of Debate Innovation, a nonprofit organization dedicated to empowering young people through debate, public speaking, critical thinking, and leadership development. Since founding the organization in 2023, he has worked to expand access to high-quality debate education for students, helping them develop the confidence and skills needed to become thoughtful leaders and engaged citizens.",
     "Originally from Ghana, Emmanuel understands the transformative impact that education and communication skills can have on a young person's future. His vision for Debate Innovation is rooted in the belief that every student—regardless of background—should have the opportunity to develop their voice, think critically, and participate in meaningful civic dialogue.",
