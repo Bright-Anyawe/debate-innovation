@@ -269,7 +269,7 @@ export const staff: readonly StaffMember[] = [
   {
     id: "isaac-kwame-nartey",
     name: "Isaac Kwame Nartey",
-    role: "Board Member",
+    role: "Board Member in-charge of Programs, Debate Innovation Ghana.",
     image: "/images/Isaac Kwame Nartey.png",
   },
 ];
