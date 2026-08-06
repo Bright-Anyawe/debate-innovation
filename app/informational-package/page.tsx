@@ -6,7 +6,7 @@ import { GalleryPreview } from "@/components/sections/GalleryPreview";
 import { Button } from "@/components/ui/Button";
 import { Adinkra } from "@/components/ui/Adinkra";
 import { Reveal } from "@/components/ui/Reveal";
-import { informational, pageIntros } from "@/lib/site-data";
+import { informational, openGraphImage, pageIntros } from "@/lib/site-data";
 
 const intro = pageIntros.informational;
 
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     title: intro.metaTitle,
     description: intro.metaDescription,
     url: "/informational-package",
+    images: [openGraphImage],
   },
 };
 

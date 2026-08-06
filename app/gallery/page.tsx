@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { PageHero } from "@/components/layout/PageHero";
 import { GalleryGrid } from "@/components/sections/GalleryGrid";
-import { pageIntros } from "@/lib/site-data";
+import { openGraphImage, pageIntros } from "@/lib/site-data";
 
 const intro = pageIntros.gallery;
 
@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   title: intro.metaTitle,
   description: intro.metaDescription,
   alternates: { canonical: "/gallery" },
-  openGraph: { title: intro.metaTitle, description: intro.metaDescription, url: "/gallery" },
+  openGraph: {
+    title: intro.metaTitle,
+    description: intro.metaDescription,
+    url: "/gallery",
+    images: [openGraphImage],
+  },
 };
 
 export default function GalleryPage() {

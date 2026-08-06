@@ -14,6 +14,8 @@ import { hero, pageIntros, pillars } from "@/lib/site-data";
 interface AboutIntroProps {
   /** Adds the "read more" link. Off on the About page, which is the destination. */
   withLink?: boolean;
+  /** Adds a "Meet the Founder" link to the founder's profile page. */
+  founderLink?: boolean;
   headingId?: string;
 }
 
@@ -21,7 +23,11 @@ interface AboutIntroProps {
  * The organisation in one screen: a photo collage against the three pillars
  * that define what Debate Innovation does — Engage, Learn, Evolve.
  */
-export function AboutIntro({ withLink = true, headingId = "about-heading" }: AboutIntroProps) {
+export function AboutIntro({
+  withLink = true,
+  founderLink = true,
+  headingId = "about-heading",
+}: AboutIntroProps) {
   return (
     <section aria-labelledby={headingId} className="relative py-section">
       <div className="container-page">
@@ -93,15 +99,22 @@ export function AboutIntro({ withLink = true, headingId = "about-heading" }: Abo
               ))}
             </RevealGroup>
 
-            {withLink ? (
-              <Reveal delay={0.15} className="mt-9">
-                <Button href="/about" size="lg">
-                  Learn More
-                  <ArrowRight
-                    className="size-4 transition-transform duration-300 group-hover:translate-x-1"
-                    aria-hidden="true"
-                  />
-                </Button>
+            {withLink || founderLink ? (
+              <Reveal delay={0.15} className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                {withLink ? (
+                  <Button href="/about" size="lg">
+                    Learn More
+                    <ArrowRight
+                      className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </Button>
+                ) : null}
+                {founderLink ? (
+                  <Button href="/about/founder" variant="outline" size="lg">
+                    Meet the Founder
+                  </Button>
+                ) : null}
               </Reveal>
             ) : null}
           </div>

@@ -5,7 +5,7 @@ import { AboutIntro } from "@/components/sections/AboutIntro";
 import { StaffCarousel } from "@/components/sections/StaffCarousel";
 import { StatsBand } from "@/components/sections/StatsBand";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { pageIntros } from "@/lib/site-data";
+import { openGraphImage, pageIntros } from "@/lib/site-data";
 
 const intro = pageIntros.about;
 
@@ -13,7 +13,12 @@ export const metadata: Metadata = {
   title: intro.metaTitle,
   description: intro.metaDescription,
   alternates: { canonical: "/about" },
-  openGraph: { title: intro.metaTitle, description: intro.metaDescription, url: "/about" },
+  openGraph: {
+    title: intro.metaTitle,
+    description: intro.metaDescription,
+    url: "/about",
+    images: [openGraphImage],
+  },
 };
 
 export default function AboutPage() {

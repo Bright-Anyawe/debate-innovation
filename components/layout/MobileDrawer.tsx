@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useRef } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { GhanaAccent, Wordmark } from "@/components/ui/Brand";
+import { GhanaAccent } from "@/components/ui/Brand";
+import { Logo } from "@/components/ui/Logo";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -67,7 +68,7 @@ export function MobileDrawer({ isOpen, onClose, onDonate, pathname }: MobileDraw
             className="absolute inset-y-0 right-0 flex w-[min(22rem,90vw)] flex-col overflow-y-auto bg-white outline-none"
           >
             <div className="flex items-center justify-between border-b border-ink-100 px-6 py-4">
-              <Wordmark stacked />
+              <Logo className="h-12" />
               <button
                 type="button"
                 onClick={onClose}

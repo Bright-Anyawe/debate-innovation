@@ -9,6 +9,19 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { VideoFeature } from "@/components/sections/VideoFeature";
 import { videoClips } from "@/lib/video-data";
 
+import type { Metadata } from "next";
+
+import { openGraphImage } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: "Debate Innovation — Empowering Voices. Shaping Leaders.",
+    images: [openGraphImage],
+  },
+};
+
 /**
  * Home page.
  *

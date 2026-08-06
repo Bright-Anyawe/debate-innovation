@@ -4,7 +4,8 @@ import { ChevronRight, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 import { Newsletter } from "@/components/sections/Newsletter";
-import { GhanaRibbon, Wordmark } from "@/components/ui/Brand";
+import { GhanaRibbon } from "@/components/ui/Brand";
+import { Logo } from "@/components/ui/Logo";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { articleHref, articles } from "@/lib/news-data";
 import { footerLinks, site, socialLinks } from "@/lib/site-data";
@@ -21,7 +22,7 @@ export function Footer() {
       <div className="container-page pb-14">
         <div className="grid gap-10 border-t border-ink-200/70 pt-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
-            <Wordmark stacked />
+            <Logo className="h-20" />
             <p className="mt-5 max-w-xs text-[0.9375rem] leading-relaxed text-ink-600">
               {site.tagline}
             </p>

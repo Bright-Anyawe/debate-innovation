@@ -10,8 +10,8 @@ import { MobileDrawer } from "@/components/layout/MobileDrawer";
 import { NAV_INDICATOR_ID, NavLink } from "@/components/layout/NavLink";
 import { useSupport } from "@/components/providers/SupportProvider";
 import { NavSwoosh } from "@/components/ui/Brand";
-import Image from "next/image";
 import { Button } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
 import { isNavLinkActive, navLinks, site } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
@@ -73,14 +73,7 @@ export function Header() {
             >
               {/* Official artwork. The source PNG is black on solid white with
                   no alpha, so it sits in the white logo tile the brand uses. */}
-              <Image
-                src="/images/di-logo.png"
-                alt=""
-                width={96}
-                height={96}
-                priority
-                className="h-11 w-auto transition-transform duration-500 hover:scale-105 sm:h-14"
-              />
+              <Logo className="h-11 transition-transform duration-500 hover:scale-105 sm:h-14" />
             </Link>
 
             <nav aria-label="Main" className="hidden flex-1 lg:block">

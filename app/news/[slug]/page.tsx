@@ -9,7 +9,7 @@ import { GhanaAccent } from "@/components/ui/Brand";
 import { Button } from "@/components/ui/Button";
 import { Photo } from "@/components/ui/Photo";
 import { articles, findArticle } from "@/lib/news-data";
-import { site } from "@/lib/site-data";
+import { openGraphImage, site } from "@/lib/site-data";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: article.excerpt,
       url: `/news/${article.slug}`,
       publishedTime: article.isoDate,
+      images: [openGraphImage],
     },
   };
 }

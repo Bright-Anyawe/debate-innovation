@@ -6,7 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { TopBar } from "@/components/layout/TopBar";
 import { SupportProvider } from "@/components/providers/SupportProvider";
-import { site } from "@/lib/site-data";
+import { openGraphImage, site } from "@/lib/site-data";
 
 import "./globals.css";
 
@@ -51,11 +51,13 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} — Empowering Voices. Shaping Leaders.`,
     description: site.description,
+    images: [openGraphImage],
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — Empowering Voices. Shaping Leaders.`,
     description: site.description,
+    images: [openGraphImage.url],
   },
   robots: { index: true, follow: true },
 };

@@ -25,6 +25,12 @@ export const site = {
   hours: "24/7",
 } as const;
 
+/** Shared social-share image, included in every page's Open Graph metadata. */
+export const openGraphImage = {
+  url: "/images/debate-session-in-progress.png",
+  alt: "Students debating at a Debate Innovation tournament",
+} as const;
+
 export const socialLinks = [
   { label: "Facebook", href: "https://facebook.com", icon: "facebook" },
   { label: "TikTok", href: "https://tiktok.com", icon: "tiktok" },
@@ -254,6 +260,12 @@ export const staff: readonly StaffMember[] = [
   { id: "clement-yeboah", name: "Clement Yeboah", role: "Student Ambassador, Ghana", image: "/images/Clement.png" },
   { id: "davidson-nzekwe-daniel", name: "Davidson Nzekwe-Daniel", role: "Founder of Davidson Initiative" },
   { id: "angela-el-fayez", name: "Angela El-Fayez", role: "Professor" },
+  {
+    id: "emmanuel-koffie",
+    name: "Emmanuel Koffie",
+    role: "Board Member",
+    image: "/images/Mr. Emmanuel koffie.png",
+  },
 ];
 
 /* -------------------------------------------------------------------------- */

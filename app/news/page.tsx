@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { PageHero } from "@/components/layout/PageHero";
 import { NewsGrid } from "@/components/sections/NewsGrid";
-import { pageIntros } from "@/lib/site-data";
+import { openGraphImage, pageIntros } from "@/lib/site-data";
 
 const intro = pageIntros.news;
 
@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   title: intro.metaTitle,
   description: intro.metaDescription,
   alternates: { canonical: "/news" },
-  openGraph: { title: intro.metaTitle, description: intro.metaDescription, url: "/news" },
+  openGraph: {
+    title: intro.metaTitle,
+    description: intro.metaDescription,
+    url: "/news",
+    images: [openGraphImage],
+  },
 };
 
 export default function NewsPage() {
