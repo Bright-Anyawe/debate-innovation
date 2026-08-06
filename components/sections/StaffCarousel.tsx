@@ -1,18 +1,80 @@
 "use client";
 
+import { useReducedMotion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { Photo } from "@/components/ui/Photo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import Link from "next/link";
 import { staff, type StaffMember } from "@/lib/site-data";
 
+const AUTO_MS = 4000;
+const CARD_WIDTH_CLASS = "w-[15rem] sm:w-[16.5rem]";
+
 /**
  * The people behind the organisation.
  *
- * An infinite marquee: the track renders the board twice and translates by
- * exactly -50%, so it circles seamlessly with no JS. The duplicate copy is
- * `aria-hidden` so screen readers hear the board once. It pauses on hover.
+ * A scroll-snap carousel that auto-advances and can be steered with prev/next
+ * buttons. The track renders the board twice so it wraps seamlessly; when the
+ * scroll position passes the first copy it snaps back to the mirror position.
+ * It pauses on hover and keyboard focus, and stops entirely for reduced motion.
  */
 export function StaffCarousel() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const [isPaused, setIsPaused] = useState(false);
+
+  /*
+   * One card step in pixels: fixed card width plus the gap. Kept in state so
+   * too much scrolling on a small screen, and updated if the layout changes.
+   */
+  const cardRef = useRef<HTMLLIElement>(null);
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    const measure = () => {
+      // gap-5 = 1.25rem between the card and the one after it.
+      setStep(card.getBoundingClientRect().width + 20);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, []);
+
+  const snapToMirror = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const singleWidth = scroller.scrollWidth / 2;
+    if (scroller.scrollLeft >= singleWidth - 8) {
+      // Instantly jump to the mirrored, identical position in the first copy.
+      scroller.scrollTo({ left: scroller.scrollLeft - singleWidth, behavior: "auto" });
+    }
+  }, []);
+
+  const scrollByStep = useCallback(
+    (dir: 1 | -1) => {
+      const scroller = scrollerRef.current;
+      if (!scroller || step <= 0) return;
+      scroller.scrollBy({ left: dir * step, behavior: "smooth" });
+    },
+    [step],
+  );
+
+  // Auto-advance, pausing on hover/focus and for reduced motion.
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    if (isPaused) return;
+    const timer = window.setInterval(() => {
+      const scroller = scrollerRef.current;
+      if (scroller) scroller.scrollBy({ left: step, behavior: "smooth" });
+    }, AUTO_MS);
+    return () => window.clearInterval(timer);
+  }, [prefersReducedMotion, isPaused, step]);
+
   return (
     <section aria-labelledby="staff-heading" className="relative isolate overflow-hidden py-section">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-surface-tint" />
@@ -26,6 +88,11 @@ export function StaffCarousel() {
         />
       </div>
 
+      {/*
+        The scroller owns scrolling, so the hamburger-handle build is not the
+        focus target. Native scroll + snap means the space bar and arrow keys
+        still work, and screen readers get a labelled scrollable region.
+      */}
       <div className="group relative mt-12">
         {/* Edge fades so cards enter and leave rather than being cut off. */}
         <div
@@ -37,21 +104,52 @@ export function StaffCarousel() {
           className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-surface-tint to-transparent sm:w-24"
         />
 
-        <div className="animate-marquee flex w-max gap-5">
+        <div
+          ref={scrollerRef}
+          onScroll={snapToMirror}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocusCapture={() => setIsPaused(true)}
+          onBlurCapture={() => setIsPaused(false)}
+          aria-label="Board of Directors — scroll or use the arrows"
+          className="flex snap-x snap-mandatory touch-pan-x overflow-x-auto scroll-smooth py-2"
+        >
           {[0, 1].map((copy) => (
             <ul
               key={copy}
               aria-hidden={copy === 1}
-              className="flex shrink-0 items-stretch gap-5 pr-5"
+              className="flex shrink-0 snap-x snap-mandatory items-stretch gap-5 pr-5"
             >
               {staff.map((member) => (
-                <li key={`${copy}-${member.id}`} className="w-[15rem] shrink-0 sm:w-[16.5rem]">
-                  <StaffCard member={member} />
+                <li
+                  key={`${copy}-${member.id}`}
+                  ref={copy === 0 && member.id === staff[0].id ? cardRef : undefined}
+                  className="shrink-0 snap-start"
+                >
+                  <div className={CARD_WIDTH_CLASS}>
+                    <StaffCard member={member} />
+                  </div>
                 </li>
               ))}
             </ul>
           ))}
         </div>
+
+        {/* Floating prev/next controls, vertically centred on the strip. */}
+        <NavButton
+          label="Previous directors"
+          onClick={() => scrollByStep(-1)}
+          className="-left-3 sm:-left-6"
+        >
+          <ChevronLeft className="size-5" aria-hidden="true" />
+        </NavButton>
+        <NavButton
+          label="Next directors"
+          onClick={() => scrollByStep(1)}
+          className="-right-3 sm:-right-6"
+        >
+          <ChevronRight className="size-5" aria-hidden="true" />
+        </NavButton>
       </div>
     </section>
   );
@@ -108,4 +206,27 @@ function StaffCard({ member }: { member: StaffMember }) {
   }
 
   return <article className="group h-full">{card}</article>;
+}
+
+function NavButton({
+  label,
+  onClick,
+  className,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={`absolute top-1/2 z-20 grid size-12 -translate-y-1/2 place-items-center rounded-full border border-ink-100 bg-white text-deep-700 shadow-card-lifted transition-all duration-300 hover:border-brand-400 hover:bg-brand-500 hover:text-white ${className ?? ""}`}
+    >
+      {children}
+    </button>
+  );
 }

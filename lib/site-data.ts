@@ -266,6 +266,12 @@ export const staff: readonly StaffMember[] = [
     role: "Board Member",
     image: "/images/Mr. Emmanuel koffie.png",
   },
+  {
+    id: "isaac-kwame-nartey",
+    name: "Isaac Kwame Nartey",
+    role: "Board Member",
+    image: "/images/Isaac Kwame Nartey.png",
+  },
 ];
 
 /* -------------------------------------------------------------------------- */

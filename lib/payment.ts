@@ -9,5 +9,5 @@
 
 export const payments = {
   /** PayBee donation campaign URL donors are redirected to at checkout. */
-  donationUrl: "https://paybee.io/@debateinnova@1;",
+  donationUrl: "https://paybee.io/@debateinnova@1",
 } as const;
