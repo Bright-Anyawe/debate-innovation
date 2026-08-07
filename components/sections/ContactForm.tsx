@@ -65,23 +65,34 @@ export function ContactForm() {
     setStatus("submitting");
     setFormMessage(null);
 
+    // Submit directly to Web3Forms. `access_key` identifies this form's
+    // inbox; every other entry is forwarded as a plain-text field.
+    const formData = new FormData();
+    formData.append("access_key", "c9e76338-dacd-4921-9346-c20e37db8cc4");
+    formData.append("name", values.name);
+    formData.append("email", values.email);
+    formData.append("topic", values.topic);
+    formData.append("message", values.message);
+
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // `company` is the honeypot — hidden from real users, tempting to bots.
-        // Its live value is forwarded so the server can silently drop the hit.
-        body: JSON.stringify({ ...values, company: honeypotRef.current?.value ?? "" }),
+        body: formData,
       });
 
-      const result = (await response.json()) as {
-        ok: boolean;
-        message: string;
-        errors?: ContactErrors;
-      };
+      const text = await response.text();
+      let result: { success: boolean; message: string };
+      try {
+        result = JSON.parse(text);
+      } catch {
+        // Web3Forms can return an HTML error page instead of JSON. Surface the
+        // HTTP status so the failure is diagnosable rather than a mystery.
+        setStatus("error");
+        setFormMessage(`Unexpected response (${response.status}). Please try again.`);
+        return;
+      }
 
-      if (!response.ok || !result.ok) {
-        if (result.errors) setErrors(result.errors);
+      if (!response.ok || !result.success) {
         setStatus("error");
         setFormMessage(result.message ?? "Something went wrong. Please try again.");
         return;
@@ -91,7 +102,8 @@ export function ContactForm() {
       setFormMessage(result.message);
       setValues(EMPTY_FORM);
       setTouched({});
-    } catch {
+    } catch (error) {
+      console.error("Web3Forms submission failed:", error);
       setStatus("error");
       setFormMessage("We could not reach the server. Please check your connection and try again.");
     }
