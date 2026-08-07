@@ -27,8 +27,8 @@ export const site = {
 
 /** Shared social-share image, included in every page's Open Graph metadata. */
 export const openGraphImage = {
-  url: "/images/debate-session-in-progress.png",
-  alt: "Students debating at a Debate Innovation tournament",
+  url: "/images/di-logo.png",
+  alt: "Debate Innovation logo",
 } as const;
 
 export const socialLinks = [
