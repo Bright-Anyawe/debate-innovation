@@ -2,12 +2,11 @@
 
 import { Heart, Mail, MapPin, Phone } from "lucide-react";
 
-import { ContactForm } from "@/components/sections/ContactForm";
 import { useSupport } from "@/components/providers/SupportProvider";
 import { Adinkra } from "@/components/ui/Adinkra";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { slideInLeft, slideInRight } from "@/lib/motion";
+import { slideInLeft } from "@/lib/motion";
 import { site } from "@/lib/site-data";
 
 export function Contact() {
@@ -16,8 +15,8 @@ export function Contact() {
   return (
     <section aria-label="Contact form and details" className="relative py-section">
       <div className="container-page">
-        <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-          <Reveal variants={slideInLeft} className="lg:col-span-5">
+        <div className="mx-auto max-w-3xl">
+          <Reveal variants={slideInLeft}>
             <div className="flex h-full flex-col gap-6">
               <div className="relative overflow-hidden rounded-3xl bg-deep-700 p-7 text-white sm:p-8">
                 <Adinkra
@@ -51,12 +50,6 @@ export function Contact() {
                 <ContactRow icon={MapPin} label="Office" value={site.address} />
               </ul>
             </div>
-          </Reveal>
-
-          <Reveal variants={slideInRight} className="lg:col-span-7">
-            {/* Names the form region in the outline; the page h1 already says it. */}
-            <h2 className="sr-only">Send us a message</h2>
-            <ContactForm />
           </Reveal>
         </div>
       </div>
