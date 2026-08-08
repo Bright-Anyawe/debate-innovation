@@ -230,7 +230,7 @@ export const stats: readonly Stat[] = [
   { value: 4, suffix: "", label: "Years Experience", scale: "sm" },
   { value: 85, suffix: "%", label: "Retention Rate", scale: "lg" },
   { value: 6, suffix: "k", label: "Overall Students", scale: "sm" },
-  { value: 6, suffix: "k", label: "Happy Students", scale: "lg" },
+  { value: 100, suffix: "", label: "Schools Across Ghana", scale: "lg" },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -315,9 +315,21 @@ export interface Testimonial {
   readonly name: string;
   readonly role: string;
   readonly rating: 1 | 2 | 3 | 4 | 5;
+  /** Path under /public. Omit to render the initials monogram fallback. */
+  readonly image?: string;
 }
 
-export const testimonials: readonly Testimonial[] = [];
+export const testimonials: readonly Testimonial[] = [
+  {
+    id: "sam-george",
+    quote:
+      "This is a good initiative that will help to improve the public speaking of young students, from this early stage. The Ministry of Education should support it in totality so that it transcends to the Tertiary Institution. I will entrust a committee that is in charge of education in my constituency to carry it up and support its implementation in the Ningo Prampram Constituency.",
+    name: "Sam George",
+    role: "Member of Parliament, Ningo-Prampram Constituency",
+    rating: 5,
+    image: "/images/Sam George.png",
+  },
+];
 
 /* -------------------------------------------------------------------------- */
 /* Informational package                                                      */

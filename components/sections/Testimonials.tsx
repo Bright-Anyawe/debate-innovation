@@ -66,13 +66,22 @@ export function Testimonials() {
               </blockquote>
 
               <footer className="relative mt-6 flex items-center gap-3 border-t border-ink-100 pt-5">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-100 font-display text-sm font-bold text-brand-700">
-                  {item.name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .slice(0, 2)
-                    .join("")}
-                </span>
+                {item.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.image}
+                    alt={`Portrait of ${item.name}`}
+                    className="size-11 shrink-0 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-100 font-display text-sm font-bold text-brand-700">
+                    {item.name
+                      .split(" ")
+                      .map((part) => part[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </span>
+                )}
                 <span>
                   <span className="block font-display font-semibold text-deep-700">{item.name}</span>
                   <span className="block text-sm text-ink-500">{item.role}</span>
