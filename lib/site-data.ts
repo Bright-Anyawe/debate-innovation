@@ -144,10 +144,10 @@ export const pageIntros = {
   tournaments: {
     script: "Official Program",
     title: "Tournament information",
-    lede: "Championships, regional legs, and the workshops that prepare students for them — all entry-free, with travel covered.",
+    lede: "A national competition for Basic Schools and Senior High-Schools across the country — from the zonal stage to the annual championship.",
     metaTitle: "Tournament Info",
     metaDescription:
-      "Debate Innovation tournaments, workshops, and leadership tracks for students across Ghana.",
+      "Debate Innovation national competitions for Basic Schools and Senior High-Schools across the country, from zonal rounds to the annual championship.",
   },
   gallery: {
     script: "Official Program",
@@ -372,34 +372,34 @@ export interface ProgramItem {
 
 export const programs: readonly ProgramItem[] = [
   {
-    id: "national-championship",
-    title: "National Championship",
+    id: "zonal-stage",
+    title: "Zonal Stage",
     description:
-      "Our flagship competition. Schools from every region meet across three days of rounds, closing with a final argued in front of students, families, and press.",
-    icon: "trophy",
-    meta: "Annual · 3 days",
-    location: "Accra",
-    tag: "Selective",
-  },
-  {
-    id: "inter-basic-schools",
-    title: "Inter-Basic Schools Debate",
-    description:
-      "Competitive debate for primary and junior high students, hosted in partnership with schools and community organisations.",
+      "The opening stage of the competition. Inter-Schools Competition where schools across the country compete in their zones.",
     icon: "users",
-    meta: "Termly",
-    location: "Host schools nationwide",
+    meta: "Stage 1 · Inter-Schools Competition",
+    location: "Zones across the country",
     tag: "Open",
   },
   {
-    id: "regional-rounds",
-    title: "Regional Qualifying Rounds",
+    id: "national-championship",
+    title: "National Championship",
     description:
-      "Qualifying legs that bring the championship to students rather than asking them to travel to it. Entry is free and every team receives written feedback.",
-    icon: "globe",
-    meta: "Season-long",
-    location: "Regions across Ghana",
-    tag: "Free",
+      "The best winners from both the Basic and Senior High-Schools competitions meet to crown the national champions.",
+    icon: "trophy",
+    meta: "Stage 2 · Annual",
+    location: "National venue",
+    tag: "Selective",
+  },
+  {
+    id: "basic-schools-tournament",
+    title: "Basic Schools Tournament",
+    description:
+      "Competitive debate for children from Primary 5 to JHS 3, hosted in partnership with schools and community organisations.",
+    icon: "graduationCap",
+    meta: "Primary 5 – JHS 3",
+    location: "Host schools nationwide",
+    tag: "Open",
   },
   {
     id: "public-speaking",
@@ -432,6 +432,63 @@ export const programs: readonly ProgramItem[] = [
     tag: "Selective",
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* Tournament information                                                     */
+/* -------------------------------------------------------------------------- */
+
+export interface TournamentStage {
+  readonly id: string;
+  readonly step: string;
+  readonly title: string;
+  readonly description: string;
+  readonly icon: IconName;
+}
+
+export interface AwardGroup {
+  readonly id: string;
+  readonly title: string;
+  readonly items: readonly string[];
+  readonly icon: IconName;
+}
+
+export const tournamentInfo = {
+  overview:
+    "The competition is organised for Basic Schools and Senior High-Schools across the Country.",
+  eligibility: "The Basic Schools Tournament is open for children from Primary 5 to JHS 3.",
+  stages: [
+    {
+      id: "zonal-stage",
+      step: "Stage 1",
+      title: "Zonal Stage",
+      description: "Inter-Schools Competition.",
+      icon: "users",
+    },
+    {
+      id: "national-championship",
+      step: "Stage 2",
+      title: "National Championship",
+      description: "Best winners from both Basic and Senior High-Schools competitions.",
+      icon: "trophy",
+    },
+  ] as const satisfies readonly TournamentStage[],
+  recognition: [
+    {
+      id: "participants",
+      title: "Participants & Schools",
+      items: ["Certificate of participation", "Products from Sponsors"],
+      icon: "handshake",
+    },
+    {
+      id: "winners",
+      title: "Successful Winners",
+      items: ["Medals", "Certificates", "Souvenirs", "Products from Sponsors"],
+      icon: "award",
+    },
+  ] as const satisfies readonly AwardGroup[],
+  nationalChampionships:
+    "National Championship competitions are held annually to climax and award the champion for both Basic and Senior High-Schools competitions.",
+} as const;
 
 /* -------------------------------------------------------------------------- */
 /* Gallery                                                                    */
